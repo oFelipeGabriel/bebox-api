@@ -34,11 +34,12 @@ public class Usuario implements UserDetails{
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@JsonView(View.UsuarioBase.class)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column
 	private Integer id;
 
-	@JsonView(View.UsuarioResumo.class)
+	@JsonView(View.UsuarioBase.class)
 	@Column
 	private String nome;
 

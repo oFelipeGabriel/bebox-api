@@ -60,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	public Collection<Usuario> todosUsuarios(){
-		Collection<Usuario> usuarios = usuarioRepository.findByAutorizacoes_Nome("ROLE_USUARIO");
+		Collection<Usuario> usuarios = usuarioRepository.findAll();
 		return usuarios;
 	}
 	public Collection<Usuario> todosAdmins(){

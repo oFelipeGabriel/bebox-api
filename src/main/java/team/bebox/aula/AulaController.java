@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import team.bebox.user.Usuario;
 import team.bebox.user.UsuarioServiceImpl;
+import team.bebox.view.View;
 
 
 @RestController
@@ -33,6 +35,7 @@ public class AulaController {
 	private UsuarioServiceImpl usuarioServiceImpl;
 		
 	@CrossOrigin
+	@JsonView(View.UsuarioBase.class)
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public ResponseEntity<Collection<Aula>> buscar(){
 		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodas(), HttpStatus.OK);

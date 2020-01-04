@@ -13,29 +13,38 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import team.bebox.user.Usuario;
+import team.bebox.view.View;
 
 @Entity
 @Table(name = "aula")
 public class Aula {
+	@JsonView(View.UsuarioBase.class)
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 	
+	
 	@JsonFormat(pattern="dd/MM/yyyy")
 	@Column
+	@JsonView(View.UsuarioBase.class)
 	private Date dia;
 	
 	@Column
+	@JsonView(View.UsuarioBase.class)
 	private String hora;
 	
 	@Column
+	@JsonView(View.UsuarioBase.class)
 	private Integer quantidade;
 	
 	@Column
+	@JsonView(View.UsuarioBase.class)
 	private Integer checked;
 	
+	@JsonView(View.UsuarioBase.class)
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Usuario> alunos;
 
