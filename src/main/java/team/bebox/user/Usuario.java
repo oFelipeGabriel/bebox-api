@@ -74,6 +74,17 @@ public class Usuario implements UserDetails{
 
     @Column(name = "cpf")
     private String cpf;
+    
+    @Column
+    private Double valor_mensalidade;
+    
+    @JsonFormat(pattern="dd/MM/yyyy")
+    @Column
+    private Date data_pagamento;
+    
+    @JsonFormat(pattern="dd/MM/yyyy")
+    @Column 
+    private Date dataVencimento;
     	
 	@JsonView(View.UsuarioResumo.class)
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -168,6 +179,30 @@ public class Usuario implements UserDetails{
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public Double getValor_mensalidade() {
+		return valor_mensalidade;
+	}
+
+	public void setValor_mensalidade(Double valor_mensalidade) {
+		this.valor_mensalidade = valor_mensalidade;
+	}
+
+	public Date getData_pagamento() {
+		return data_pagamento;
+	}
+
+	public void setData_pagamento(Date data_pagamento) {
+		this.data_pagamento = data_pagamento;
+	}
+
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+
+	public void setDataVencimento(Date data_vencimento) {
+		this.dataVencimento = data_vencimento;
 	}
 
 	public List<Autorizacao> getAutorizacoes() {

@@ -21,4 +21,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	//public Empresa findEmpresaByAdminTurnoId(Long id);
 	Collection<Usuario> findByAutorizacoes_Nome(String nome);
 	Usuario findFirstByCpf(String login);
+	
+	Collection<Usuario> findAllByOrderByDataVencimento();
 }

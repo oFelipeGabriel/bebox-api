@@ -55,7 +55,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 
 	public Collection<Usuario> todos() {
-		Collection<Usuario> usuarios = usuarioRepository.findAll();
+		Collection<Usuario> usuarios = usuarioRepository.findAllByOrderByDataVencimento();
 		return usuarios;
 	}
 	

@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.List;
 import team.bebox.autorizacao.Autorizacao;
 import team.bebox.autorizacao.AutorizacaoServiceImpl;
-import team.bebox.view.View;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
@@ -46,11 +43,13 @@ public class UsuarioController {
 		String endereco = json.get("endereco").asText();
 		String telefone = json.get("telefone").asText();
 		Long dataNasc = json.get("data_nasc").asLong();
+		Double valor_mensalidade = json.get("mensalidade").asDouble();
+		Long data_vcto = json.get("data_vencimento").asLong();
 		
-		System.out.println(idAutorizacao);
-		
+						
 		Date dataNascimento = new Date(dataNasc);
 		Date date = new Date(System.currentTimeMillis());
+		Date data_vencimento = new Date(data_vcto);
 		Usuario usuario = new Usuario();
 
 		usuario.setNome(nome);
@@ -62,6 +61,8 @@ public class UsuarioController {
 		usuario.setEndereco(endereco);
 		usuario.setTelefone(telefone);
 		usuario.setData_nascimento(dataNascimento);
+		usuario.setValor_mensalidade(valor_mensalidade);
+		usuario.setDataVencimento(data_vencimento);
 		
 		Autorizacao a;
 		if(idAutorizacao) {
@@ -108,14 +109,36 @@ public class UsuarioController {
 	}
 	
 	@CrossOrigin
-	@RequestMapping(value="/editar", method=RequestMethod.PUT)
-	public ResponseEntity<Usuario> editarEmpresa(@RequestBody Usuario e){
+	@RequestMapping(value="/editar/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Usuario> editarEmpresa(@PathVariable("id") int id, @RequestBody ObjectNode json){
+		String nome = json.get("nome").asText();
+		String email = json.get("email").asText();
+		String cpf = json.get("cpf").asText();
+		String endereco = json.get("endereco").asText();
+		String telefone = json.get("telefone").asText();
+		Long dataNasc = json.get("data_nasc").asLong();
+		Double valor_mensalidade = json.get("mensalidade").asDouble();
+		Long data_vcto = json.get("data_vencimento").asLong();
+		
+		Date dataNascimento = new Date(dataNasc);
+		Date data_vencimento = new Date(data_vcto);
+		Usuario usuario = usuarioService.buscarPorId(id);
+		usuario.setNome(nome);
+		usuario.setCpf(cpf);
+		usuario.setEmail(email);
+		usuario.setEndereco(endereco);
+		usuario.setTelefone(telefone);
+		usuario.setData_nascimento(dataNascimento);
+		usuario.setValor_mensalidade(valor_mensalidade);
+		usuario.setDataVencimento(data_vencimento);
+		
+		usuarioService.salvar(usuario);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		return new ResponseEntity<Usuario>(e, responseHeaders, HttpStatus.OK);
+		return new ResponseEntity<Usuario>(usuario, responseHeaders, HttpStatus.OK);
 	}
 	
 	@CrossOrigin
-	@RequestMapping(value="/editarSenha{id}", method=RequestMethod.PUT)
+	@RequestMapping(value="/editarSenha/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Usuario> editarSenhaEmpresa(@PathVariable("id") Integer id){
 		Usuario e = usuarioService.buscarPorId(id);
 		e.setSenha(md5(e.getSenha()));
@@ -125,10 +148,10 @@ public class UsuarioController {
 	}
 	
 	@CrossOrigin
-	@RequestMapping(value = "/deleteEmpresa/{id}/", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/{id}/", method = RequestMethod.DELETE)
 	public Boolean deleteEmpresa(@PathVariable Integer id){
-		Usuario empresa = usuarioService.buscarPorId(id);
-		usuarioService.excluir(empresa);
+		Usuario usuario = usuarioService.buscarPorId(id);
+		usuarioService.excluir(usuario);
 		return true;
 	}
 
