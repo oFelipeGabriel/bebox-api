@@ -63,7 +63,7 @@ public class SpringRestApplication {
 		    userAdmin.setIs_admin(true);
 		    userAdmin.setNome(nome);
 		    List<Autorizacao> auts = new ArrayList<Autorizacao>();
-		    auts.add(admin);
+		    auts.add(aut1);
 		    userAdmin.setAutorizacoes(auts);
 		    usuarioService.salvar(userAdmin);
 		    

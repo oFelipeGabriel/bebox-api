@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -155,7 +156,7 @@ public class UsuarioController {
 		return true;
 	}
 
-	//@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public ResponseEntity<Collection<Usuario>> getAll() {
