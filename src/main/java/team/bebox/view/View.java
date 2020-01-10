@@ -22,4 +22,6 @@ public class View {
 	 */
 	public static class UsuarioResumoAlternativo {}
 	public static class Admin extends UsuarioResumo{}
+	
+	public static class Pagamento {}
 }
