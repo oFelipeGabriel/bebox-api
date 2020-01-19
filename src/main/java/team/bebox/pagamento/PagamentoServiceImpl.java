@@ -48,5 +48,10 @@ public class PagamentoServiceImpl implements PagamentoService{
 	public List<Pagamento> buscaPorUsuario(Usuario u){
 		return pagamentoRepo.findByUsuario(u);
 	}
+	
+	@Override
+	public List<Pagamento> buscaPorForma(String forma, Usuario u){
+		return pagamentoRepo.findByFormaPagamentoAndUsuario(forma, u);
+	}
 
 }

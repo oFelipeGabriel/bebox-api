@@ -10,5 +10,6 @@ import team.bebox.user.Usuario;
 public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
 
 	public List<Pagamento> findByUsuario(Usuario u);
+	public List<Pagamento> findByFormaPagamentoAndUsuario(String forma_pagamento, Usuario u);
 
 }

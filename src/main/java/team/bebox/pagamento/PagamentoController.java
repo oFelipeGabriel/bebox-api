@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,14 @@ public class PagamentoController {
 		Pagamento pag = new Pagamento(d, formaPagamento, valor, u);
 		pagamentoService.salvar(pag);
 		return new ResponseEntity<List<Pagamento>> (pagamentoService.buscaPorUsuario(u), HttpStatus.CREATED);
+	}
+		
+	@JsonView(View.Pagamento.class)
+	@RequestMapping(value="/{forma}/{idUsuario}", method=RequestMethod.GET)
+	public ResponseEntity<List<Pagamento>> buscaPorForma(@PathVariable String forma, @PathVariable Integer idUsuario){
+		Usuario u = usuarioService.buscarPorId(idUsuario);
+		List<Pagamento> pagamentos = pagamentoService.buscaPorForma(forma, u);
+		return new ResponseEntity<List<Pagamento>> (pagamentos, HttpStatus.OK);
 	}
 
 }

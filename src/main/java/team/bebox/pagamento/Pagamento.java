@@ -30,7 +30,7 @@ public class Pagamento {
 	
 	@JsonView(View.Pagamento.class)
 	@Column
-	private String forma_pagamento;
+	private String formaPagamento;
 	
 	@JsonView(View.Pagamento.class)
 	@Column
@@ -46,7 +46,7 @@ public class Pagamento {
 	public Pagamento(Date dia, String forma_pagamento, Double valor, Usuario usuario) {
 		super();
 		this.dia = dia;
-		this.forma_pagamento = forma_pagamento;
+		this.formaPagamento = forma_pagamento;
 		this.valor = valor;
 		this.usuario = usuario;
 	}
@@ -68,11 +68,11 @@ public class Pagamento {
 	}
 
 	public String getForma_pagamento() {
-		return forma_pagamento;
+		return formaPagamento;
 	}
 
 	public void setForma_pagamento(String forma_pagamento) {
-		this.forma_pagamento = forma_pagamento;
+		this.formaPagamento = forma_pagamento;
 	}
 
 	public Double getValor() {

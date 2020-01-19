@@ -12,5 +12,5 @@ public interface PagamentoService {
 	public Collection<Pagamento> getPagamentos();
 	public Pagamento buscarPorId(Integer id);
 	public List<Pagamento> buscaPorUsuario(Usuario u);
-
+	public List<Pagamento> buscaPorForma(String forma, Usuario u);
 }
