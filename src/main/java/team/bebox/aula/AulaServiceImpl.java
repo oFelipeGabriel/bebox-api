@@ -23,7 +23,7 @@ public class AulaServiceImpl implements AulaService{
 	}
 	@Override
 	public Collection<Aula> buscarTodas(){
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAll();
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDia();
 		return aulas;
 	}
 	@Override

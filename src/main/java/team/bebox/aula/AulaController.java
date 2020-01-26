@@ -3,6 +3,7 @@ package team.bebox.aula;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -68,19 +69,24 @@ public class AulaController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/addAluno/{aula}/{aluno}/", method = RequestMethod.POST)
-	public ResponseEntity<Aula> addAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
+	public ResponseEntity<Collection<Aula>> addAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
-		Usuario u = usuarioServiceImpl.buscarPorId(aluno);		
+		Usuario u = usuarioServiceImpl.buscarPorId(aluno);
+		aulaServiceImpl.addAluno(a, u);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		return new ResponseEntity<Aula>(aulaServiceImpl.addAluno(a, u), responseHeaders, HttpStatus.CREATED);
+		Collection<Aula> aulas = aulaServiceImpl.buscarTodas();
+		return new ResponseEntity<Collection<Aula>>(aulas, responseHeaders, HttpStatus.CREATED);
 	}
-	
+
+	@JsonView(View.UsuarioBase.class)
 	@CrossOrigin
 	@RequestMapping(value = "/removeAluno/{aula}/{aluno}/", method = RequestMethod.POST)
-	public ResponseEntity<Aula> removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
+	public ResponseEntity<Collection<Aula>> removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
 		Usuario u = usuarioServiceImpl.buscarPorId(aluno);		
+		aulaServiceImpl.removeAluno(a, u);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		return new ResponseEntity<Aula>(aulaServiceImpl.removeAluno(a, u), responseHeaders, HttpStatus.CREATED);
+		Collection<Aula> aulas = aulaServiceImpl.buscarTodas();
+		return new ResponseEntity<Collection<Aula>>(aulas, responseHeaders, HttpStatus.CREATED);
 	}
 }
