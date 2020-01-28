@@ -5,6 +5,9 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import team.bebox.aula.Aula;
+import team.bebox.aula.AulaServiceImpl;
 import team.bebox.user.UsuarioRepository;
 
 
@@ -14,6 +17,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private AulaServiceImpl aulaService;
 
 
 	@Override
@@ -30,9 +36,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public Usuario excluir(Usuario empresa) {
-		usuarioRepository.delete(empresa);
-		return empresa;
+	public Usuario excluir(Usuario usuario) {
+		usuario.setStatus(false);
+		List<Aula> aulas = aulaService.buscaPorAlunoId(usuario.getId());
+		Date hoje = new Date();
+		for(Aula a : aulas) {
+			if(a.getDia().compareTo(hoje) < 0) {
+				a.getAlunos().remove(usuario);
+				aulaService.salvar(a);
+			}			
+		}
+		usuarioRepository.save(usuario);
+		return usuario;
 	}
 	
 	@Override
@@ -55,12 +70,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 
 	public Collection<Usuario> todos() {
-		Collection<Usuario> usuarios = usuarioRepository.findAllByOrderByDataVencimento();
+		Collection<Usuario> usuarios = usuarioRepository.findByStatus(true);
 		return usuarios;
 	}
 	
 	public Collection<Usuario> todosUsuarios(){
-		Collection<Usuario> usuarios = usuarioRepository.findAll();
+		Collection<Usuario> usuarios = usuarioRepository.findByStatus(true);
 		return usuarios;
 	}
 	public Collection<Usuario> todosAdmins(){

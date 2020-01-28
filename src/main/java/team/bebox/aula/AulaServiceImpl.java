@@ -49,4 +49,9 @@ public class AulaServiceImpl implements AulaService{
 		aula.setChecked(aula.getChecked()-1);
 		return aulaRepo.save(aula);
 	}
+	
+	@Override
+	public List<Aula> buscaPorAlunoId(Integer id){
+		return aulaRepo.findByAlunos_Id(id);
+	}
 }

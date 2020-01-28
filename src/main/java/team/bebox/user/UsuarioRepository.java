@@ -19,5 +19,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	Collection<Usuario> findByAutorizacoes_Nome(String nome);
 	Usuario findFirstByCpf(String login);
 	
-	Collection<Usuario> findAllByOrderByDataVencimento();
+	Collection<Usuario> findByStatus(Boolean status);
 }

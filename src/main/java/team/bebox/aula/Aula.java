@@ -3,6 +3,7 @@ package team.bebox.aula;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,7 +46,7 @@ public class Aula {
 	private Integer checked;
 	
 	@JsonView(View.UsuarioBase.class)
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
 	private List<Usuario> alunos;
 
 	public Aula() {

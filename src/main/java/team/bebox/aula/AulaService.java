@@ -1,6 +1,7 @@
 package team.bebox.aula;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import team.bebox.user.Usuario;
@@ -17,5 +18,7 @@ public interface AulaService {
 	Aula addAluno(Aula aula, Usuario usuario);
 
 	Aula removeAluno(Aula aula, Usuario usuario);
+	
+	List<Aula> buscaPorAlunoId(Integer id);
 
 }

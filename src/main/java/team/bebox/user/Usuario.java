@@ -87,7 +87,10 @@ public class Usuario implements UserDetails{
     @JsonFormat(pattern="dd/MM/yyyy")
     @Column 
     private Date dataVencimento;
-    	
+    
+    @Column
+    private Boolean status = true;
+    
 	@JsonView(View.UsuarioResumo.class)
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Autorizacao> autorizacoes;
@@ -206,6 +209,14 @@ public class Usuario implements UserDetails{
 
 	public void setDataVencimento(Date data_vencimento) {
 		this.dataVencimento = data_vencimento;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 	public List<Autorizacao> getAutorizacoes() {
