@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import team.bebox.aula.Aula;
 
 public interface AulaRepository extends CrudRepository<Aula, Integer>{
-
-	Collection<Aula> findAllByOrderByDia();
+	Collection<Aula> findAllByOrderByDiaAsc();
+	Collection<Aula> findAllByOrderByDiaDesc();
 	List<Aula> findByAlunos_Id(Integer id);
 
 }

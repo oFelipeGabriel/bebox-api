@@ -3,8 +3,6 @@ package team.bebox.aula;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,10 +39,15 @@ public class AulaController {
 	public ResponseEntity<Collection<Aula>> buscar(){
 		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodas(), HttpStatus.OK);
 	}
-	
+	@CrossOrigin
+	@JsonView(View.UsuarioBase.class)
+	@RequestMapping(value = "/getAllDone", method = RequestMethod.GET)
+	public ResponseEntity<Collection<Aula>> buscarFiltrada(){
+		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
+	}
 	@CrossOrigin
 	@RequestMapping(value = "/novaAula", method = RequestMethod.POST)
-	public ResponseEntity<Aula> nova(@RequestBody ObjectNode json) throws ParseException{
+	public ResponseEntity<Aula> nova(@RequestBody ObjectNode json){
 		Long dia = json.get("dia").asLong();
 		String hora = json.get("hora").asText();
 		String quantidade = json.get("quantidade").asText();
@@ -81,7 +84,7 @@ public class AulaController {
 	@JsonView(View.UsuarioBase.class)
 	@CrossOrigin
 	@RequestMapping(value = "/removeAluno/{aula}/{aluno}/", method = RequestMethod.POST)
-	public ResponseEntity<Collection<Aula>> removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
+	public ResponseEntity<Collection<Aula>> removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno) throws ParseException{
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
 		Usuario u = usuarioServiceImpl.buscarPorId(aluno);		
 		aulaServiceImpl.removeAluno(a, u);

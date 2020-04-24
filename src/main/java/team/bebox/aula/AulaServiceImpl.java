@@ -1,6 +1,9 @@
 package team.bebox.aula;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +26,20 @@ public class AulaServiceImpl implements AulaService{
 	}
 	@Override
 	public Collection<Aula> buscarTodas(){
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDia();
+		Date date = new Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaAsc();
+		Collection<Aula> remover = new ArrayList<Aula>();
+		for(Aula a: aulas) {
+			if(simpleDateFormat.format(date).compareTo(a.getDia().toString()) > 0) {
+				remover.add(a);
+			}else if(simpleDateFormat.format(date).compareTo(a.getDia().toString()) == 0 &&
+					hourFormat.format(date).compareTo(a.getHora())>0){
+				remover.add(a);
+			}
+		}
+		aulas.removeAll(remover);
 		return aulas;
 	}
 	@Override
@@ -53,5 +69,9 @@ public class AulaServiceImpl implements AulaService{
 	@Override
 	public List<Aula> buscaPorAlunoId(Integer id){
 		return aulaRepo.findByAlunos_Id(id);
+	}
+	public Collection<Aula> buscarTodasDone() {
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaDesc();
+		return aulas;
 	}
 }
