@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import team.bebox.user.Usuario;
 import team.bebox.security.JwtUtils;
 
 @EnableWebSecurity

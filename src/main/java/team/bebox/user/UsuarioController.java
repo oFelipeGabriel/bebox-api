@@ -30,7 +30,7 @@ public class UsuarioController {
 	@Autowired
 	private AutorizacaoServiceImpl autorizacaoService;
 	
-	//@PreAuthorize("ROLE_ADMIN")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
 	@RequestMapping(value = "/novoUsuario", method = RequestMethod.POST)
 	public ResponseEntity<Usuario> salvar(@RequestBody ObjectNode json) {
@@ -108,7 +108,7 @@ public class UsuarioController {
 
 		return new ResponseEntity<Usuario>(empresa, HttpStatus.OK);
 	}
-	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
 	@RequestMapping(value="/editar/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Usuario> editarEmpresa(@PathVariable("id") int id, @RequestBody ObjectNode json){
@@ -163,7 +163,7 @@ public class UsuarioController {
 		return new ResponseEntity<Collection<Usuario>>(usuarioService.todosUsuarios(), HttpStatus.OK);
 	}
 	
-	//@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	//@JsonView(View.UsuarioResumo.class)
 	@CrossOrigin
 	@RequestMapping(value = "/getAllAdmin", method = RequestMethod.GET)

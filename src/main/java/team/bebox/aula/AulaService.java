@@ -1,6 +1,5 @@
 package team.bebox.aula;
 
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +20,7 @@ public interface AulaService {
 	Aula removeAluno(Aula aula, Usuario usuario);
 	
 	List<Aula> buscaPorAlunoId(Integer id);
+
+	Collection<Aula> buscarTodas(int idAluno);
 
 }

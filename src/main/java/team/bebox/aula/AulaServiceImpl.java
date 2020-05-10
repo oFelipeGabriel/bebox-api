@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import team.bebox.user.Usuario;
+import team.bebox.user.UsuarioServiceImpl;
 
 @Service
 @Transactional
@@ -20,15 +21,29 @@ public class AulaServiceImpl implements AulaService{
 	@Autowired
 	private AulaRepository aulaRepo;
 	
+	@Autowired
+	private UsuarioServiceImpl alunoService;
+	
 	@Override
 	public Aula salvar(Aula aula) {
 		return aulaRepo.save(aula);
 	}
+	
+	
 	@Override
-	public Collection<Aula> buscarTodas(){
+	public Collection<Aula> buscarTodas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Collection<Aula> buscarTodas(int idAluno){
 		Date date = new Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+		Usuario aluno = alunoService.buscarPorId(idAluno);
+		
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaAsc();
 		Collection<Aula> remover = new ArrayList<Aula>();
 		for(Aula a: aulas) {
@@ -40,6 +55,8 @@ public class AulaServiceImpl implements AulaService{
 			}
 		}
 		aulas.removeAll(remover);
+		AulaResponse response = new AulaResponse(aluno, aulas);
+		System.out.println(response.getClasse());
 		return aulas;
 	}
 	@Override

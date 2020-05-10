@@ -22,7 +22,7 @@ import team.bebox.view.View;
 @Entity
 @Table(name = "aula")
 public class Aula {
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -30,22 +30,22 @@ public class Aula {
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
 	@Column
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	private Date dia;
 	
 	@Column
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	private String hora;
 	
 	@Column
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	private Integer quantidade;
 	
 	@Column
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	private Integer checked;
 	
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
 	private List<Usuario> alunos;
 

@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import team.bebox.user.Usuario;
-import team.bebox.view.View;
-
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
@@ -37,7 +34,7 @@ public class LoginController {
         response.setHeader("token", JwtUtils.generateToken(usuario));
         response.setHeader("Access-Control-Expose-Headers", "token");
         response.setHeader("Access-Control-Allow-Headers", 
-        		"Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, " +
+        		"Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, class-name, " +
                 "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Expose-Headers");
         return new ResponseEntity<Usuario>(usuario,HttpStatus.OK);
     }

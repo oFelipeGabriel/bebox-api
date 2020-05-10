@@ -8,7 +8,8 @@ public class View {
 	/**
 	 * Visualizacao principal com os principais atributos
 	 */
-	public static class UsuarioBase {}
+	public static class UsuarioMinimo {}
+	public static class UsuarioBase extends UsuarioMinimo{}
 	public static class UsuarioResumo extends UsuarioBase{}
 	
 	/**

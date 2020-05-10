@@ -70,9 +70,6 @@ public class SpringRestApplication {
 	    }
 	    
 	    System.out.println("Aplicação iniciada com sucesso");
-	    
-	    
-	    
 	}
 	
 

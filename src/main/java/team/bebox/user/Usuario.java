@@ -10,13 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import team.bebox.autorizacao.Autorizacao;
-import team.bebox.pagamento.Pagamento;
 import team.bebox.view.View;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +34,7 @@ public class Usuario implements UserDetails{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@JsonView(View.UsuarioBase.class)
+	@JsonView(View.UsuarioMinimo.class)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column
 	private Integer id;
