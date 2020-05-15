@@ -21,7 +21,7 @@ public class AulaResponse {
 		super();
 		this.aulasCollection = aulasColl;
 		Date dataCheck = new Date();
-		if(aluno.getAulaChecked()!="") {
+		if(aluno.getAulaChecked()!=null && aluno.getAulaChecked()!="") {
 			this.checked = aluno.getAulaChecked();
 			String[] dataCheckStr = aluno.getAulaChecked().split("=")[0].split("-");
 			String[] horasCheckStr = aluno.getAulaChecked().split("=")[1].split(":");
@@ -48,9 +48,9 @@ public class AulaResponse {
 						a.getChecked(),
 						idAlunos
 						);
-				if(this.checked!="") {
-					this.comparaDataChecada(dataCheck, a.getDia(), a.getHora());
-				}
+//				if(this.checked!="") {
+//					this.comparaDataChecada(dataCheck, a.getDia(), a.getHora());
+//				}
 				aulas.add(ar);
 			}
 		}
