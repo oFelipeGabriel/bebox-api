@@ -37,7 +37,7 @@ public class AulaController {
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
 
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@CrossOrigin
 	@GetMapping("/getAll/{aluno}")
 	@ResponseBody
