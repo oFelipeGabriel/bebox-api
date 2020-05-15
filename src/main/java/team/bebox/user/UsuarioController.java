@@ -140,9 +140,10 @@ public class UsuarioController {
 	
 	@CrossOrigin
 	@RequestMapping(value="/editarSenha/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Usuario> editarSenhaEmpresa(@PathVariable("id") Integer id){
+	public ResponseEntity<Usuario> editarSenhaEmpresa(@PathVariable("id") Integer id, @RequestBody ObjectNode json){
 		Usuario e = usuarioService.buscarPorId(id);
-		e.setSenha(md5(e.getSenha()));
+		String senha = json.get("senha").asText();
+		e.setSenha(md5(senha));
 		usuarioService.salvar(e);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		return new ResponseEntity<Usuario>(e, responseHeaders, HttpStatus.OK);
