@@ -89,6 +89,9 @@ public class Usuario implements UserDetails{
     @Column
     private Boolean status = true;
     
+    @Column
+    private String aulaChecked;
+    
 	@JsonView(View.UsuarioResumo.class)
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Autorizacao> autorizacoes;
@@ -215,6 +218,14 @@ public class Usuario implements UserDetails{
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getAulaChecked() {
+		return aulaChecked;
+	}
+
+	public void setAulaChecked(String aulaChecked) {
+		this.aulaChecked = aulaChecked;
 	}
 
 	public List<Autorizacao> getAutorizacoes() {

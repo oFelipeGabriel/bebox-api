@@ -91,4 +91,14 @@ public class AulaServiceImpl implements AulaService{
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaDesc();
 		return aulas;
 	}
+
+
+	public Collection<Aula> removeAula(int idAula) {
+		Aula aula = aulaRepo.findById(idAula).get();
+		ArrayList<Usuario> alunos = new ArrayList<>();
+		aula.setAlunos(alunos);
+		aulaRepo.save(aula);
+		aulaRepo.delete(aula);
+		return aulaRepo.findAllByOrderByDiaDesc();
+	}
 }

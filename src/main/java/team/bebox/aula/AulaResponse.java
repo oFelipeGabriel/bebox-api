@@ -14,34 +14,59 @@ public class AulaResponse {
 	Collection<Aula> aulasCollection;
 	String message;
 	String classe;
+	String checked;
 	ArrayList<AulaResumo> aulas = new ArrayList<>();
 	
 	public AulaResponse(Usuario aluno, Collection<Aula> aulasColl) {
 		super();
 		this.aulasCollection = aulasColl;
-		aulas = new ArrayList<>();
-		for(Aula a : aulasColl) {
-			ArrayList<Integer> idAlunos = new ArrayList<>();
-			for(Usuario al : a.getAlunos()) {
-				idAlunos.add(al.getId());
-			}
-			//Integer id, Date dia, String hora, Integer quantidade, Integer checked,
-			//List<Integer> alunos
-			AulaResumo ar = new AulaResumo(
-					a.getId(), 
-					a.getDia(), 
-					a.getHora(),
-					a.getQuantidade(),
-					a.getChecked(),
-					idAlunos
-					);
-			aulas.add(ar);
+		Date dataCheck = new Date();
+		if(aluno.getAulaChecked()!="") {
+			this.checked = aluno.getAulaChecked();
+			String[] dataCheckStr = aluno.getAulaChecked().split("=")[0].split("-");
+			String[] horasCheckStr = aluno.getAulaChecked().split("=")[1].split(":");
+			dataCheck = new Date(Integer.parseInt(dataCheckStr[0]), 
+					Integer.parseInt(dataCheckStr[1])-1, 
+					Integer.parseInt(dataCheckStr[2]),
+					Integer.parseInt(horasCheckStr[0]),
+					Integer.parseInt(horasCheckStr[1]));
 		}
+		this.checked = aluno.getAulaChecked();
+		aulas = new ArrayList<>();
+		if(aulasColl.isEmpty()==false) {
+			for(Aula a : aulasColl) {
+				ArrayList<Integer> idAlunos = new ArrayList<>();
+				for(Usuario al : a.getAlunos()) {
+					idAlunos.add(al.getId());
+				}
+				
+				AulaResumo ar = new AulaResumo(
+						a.getId(), 
+						a.getDia(), 
+						a.getHora(),
+						a.getQuantidade(),
+						a.getChecked(),
+						idAlunos
+						);
+				if(this.checked!="") {
+					this.comparaDataChecada(dataCheck, a.getDia(), a.getHora());
+				}
+				aulas.add(ar);
+			}
+		}
+		
 		this.comparaDatas(aluno.getDataVencimento());
 	}
 	
 	
 	
+	private boolean comparaDataChecada(Date dataCheck, java.sql.Date dia, String hora) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
 	public AulaResponse() {
 		super();
 		this.comparaDatas(new Date());
@@ -58,9 +83,6 @@ public class AulaResponse {
 
 		Date ontem = new Date();
 		ontem.setDate(anteontem.getDate()+1);
-		System.out.println(anteontem);
-		System.out.println(vencimento);
-		System.out.println(ontem);
 		if(vencimento.getDate() <= anteontem.getDate() && 
 			vencimento.getMonth() <= anteontem.getMonth() && 
 			vencimento.getYear() <= anteontem.getYear()) {
@@ -141,6 +163,16 @@ public class AulaResponse {
 		this.aulas = aulas;
 	}
 
+	public String getChecked() {
+		return checked;
+	}
+
+
+
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
+
 	class AulaResumo{
 		private Integer id;
 		private Date dia;
@@ -148,6 +180,7 @@ public class AulaResponse {
 		private Integer quantidade;
 		private Integer checked;
 		private List<Integer> alunos;
+		private Boolean isChecked;
 		public AulaResumo(Integer id, Date dia, String hora, Integer quantidade, Integer checked,
 				List<Integer> alunos) {
 			super();
@@ -195,7 +228,12 @@ public class AulaResponse {
 		public void setAlunos(List<Integer> alunos) {
 			this.alunos = alunos;
 		}
-		
+		public Boolean getIsChecked() {
+			return isChecked;
+		}
+		public void setIsChecked(Boolean isChecked) {
+			this.isChecked = isChecked;
+		}
 		
 	}
 	

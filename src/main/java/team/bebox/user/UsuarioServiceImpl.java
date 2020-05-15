@@ -25,13 +25,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public Usuario salvar(Usuario usuario) {
 
-//		Caixa caixa = new Caixa();
-//
-//		caixa.setValor(1000000000);
-//		caixa.setEmpresa_id(empresa);
-//
-//		caixaRepository.save(caixa);
-
 		return usuarioRepository.save(usuario);
 	}
 
@@ -63,11 +56,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioRepository.findById(id).get();
 	}
 
-//	public Empresa buscaPorTurno(Long turnoId) {
-//		Empresa empresa = empresaRepository.findEmpresaByAdminTurnoId(turnoId);
-//		return empresa;
-//	}
-
 
 	public Collection<Usuario> todos() {
 		Collection<Usuario> usuarios = usuarioRepository.findByStatus(true);
@@ -83,7 +71,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarios;
 	}
 
-
+	public void checkAulaToUser(Usuario user, Aula aula) {
+		String diaHora = aula.getDia().toString()+"="+aula.getHora();
+		user.setAulaChecked(diaHora);
+		usuarioRepository.save(user);
+	}
+	
 	@Override
 	public Collection<Usuario> getUsuarios(){
 		Collection<Usuario> usuarios = usuarioRepository.findAll();

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,6 +57,14 @@ public class AulaController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
+	@JsonView(View.UsuarioBase.class)
+	@PostMapping("/removeAula/{id}")
+	public ResponseEntity<Collection<Aula>> remove(@PathVariable("id") int aula){
+		return new ResponseEntity<Collection<Aula>>(aulaServiceImpl.removeAula(aula), HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@CrossOrigin
 	@RequestMapping(value = "/novaAula", method = RequestMethod.POST)
 	public ResponseEntity<Aula> nova(@RequestBody ObjectNode json){
 		Long dia = json.get("dia").asLong();
@@ -74,9 +83,12 @@ public class AulaController {
 
 	@PreAuthorize("isAuthenticated()")
 	@CrossOrigin
+	@PostMapping("/addAluno/{aula}/{aluno}/")
 	@ResponseBody
-	@RequestMapping(value = "/addAluno/{aula}/{aluno}/", method = RequestMethod.POST)
 	public AulaResponse addAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int idAluno){
+		Usuario user = usuarioServiceImpl.buscarPorId(idAluno);
+		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
+		usuarioServiceImpl.checkAulaToUser(user, a);
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
 		return new AulaResponse(aluno, aulas);
@@ -84,13 +96,13 @@ public class AulaController {
 
 	@PreAuthorize("isAuthenticated()")
 	@CrossOrigin
+	@PostMapping("/removeAluno/{aula}/{aluno}/")
 	@ResponseBody
-	@RequestMapping(value = "/removeAluno/{aula}/{aluno}/", method = RequestMethod.POST)
 	public AulaResponse removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
 		Usuario u = usuarioServiceImpl.buscarPorId(aluno);		
 		aulaServiceImpl.removeAluno(a, u);
-		Collection<Aula> aulas = aulaServiceImpl.buscarTodas();
+		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(aluno);
 		return new AulaResponse(u, aulas);
 	}
 }
