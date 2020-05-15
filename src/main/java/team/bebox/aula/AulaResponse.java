@@ -51,6 +51,7 @@ public class AulaResponse {
 //				if(this.checked!="") {
 //					this.comparaDataChecada(dataCheck, a.getDia(), a.getHora());
 //				}
+				
 				aulas.add(ar);
 			}
 		}
@@ -77,48 +78,36 @@ public class AulaResponse {
 	private void comparaDatas(Date vencimento) {
 		Calendar dataAtual = Calendar.getInstance();
 		vencimento.setHours(vencimento.getHours()+3);
+		Date venc = new Date(vencimento.getTime());
 		dataAtual.add(Calendar.DAY_OF_MONTH, -1);
 		Date anteontem = new Date();
 		anteontem.setDate(anteontem.getDate()-2);		
 
+		
 		Date ontem = new Date();
 		ontem.setDate(anteontem.getDate()+1);
-		if(vencimento.getDate() <= anteontem.getDate() && 
-			vencimento.getMonth() <= anteontem.getMonth() && 
-			vencimento.getYear() <= anteontem.getYear()) {
+		if(venc.before(anteontem)) {
 			this.classe = "negative";
 			this.message = "Você possui uma mensalidade pendente. Procure a administração Bebox para mais informações";
 			aulas = new ArrayList<>();
 			
 		}
-		else if(vencimento.getDate() <= ontem.getDate() && 
-			vencimento.getMonth() <= ontem.getMonth() && 
-			vencimento.getYear() <= ontem.getYear()) {
-			this.classe = "negative";
-			this.message = "Você possui uma mensalidade pendente.";
-		}
 		Date dAtual = new Date();
-		
-		if(dAtual.getDate() == vencimento.getDate() && 
-			dAtual.getMonth() == vencimento.getMonth() && 
-			dAtual.getYear() == vencimento.getYear()) {
-			this.classe = "warning";
-			this.message = "Sua mensalidade vence hoje.";
+		if(dAtual.getYear()==venc.getYear() &&
+				dAtual.getMonth()==venc.getMonth()){
+			if(dAtual.getDate()-1 == venc.getDate()) {
+				this.classe = "negative";
+				this.message = "Você possui uma mensalidade pendente.";
+			}
+			if(dAtual.getDate()==venc.getDate()) {
+				this.classe = "warning";
+				this.message = "Sua mensalidade vence hoje.";
+			}if(dAtual.getDate()+1 == venc.getDate()) {
+				this.classe = "info";
+				this.message = "Sua mensalidade vence amanhã.";
+			}
+			
 		}
-		
-		Date d = new Date();
-		d.setDate(d.getDate()+1);
-		if(d.getDate() == vencimento.getDate() && 
-			d.getMonth() == vencimento.getMonth() && 
-			d.getYear() == vencimento.getYear()) {
-			this.classe = "info";
-			this.message = "Sua mensalidade vence amanhã.";
-		}
-		
-//		if(dataAtual.getTime().compareTo(vencimento)<0) {
-//			this.classe = "positive";
-//		}
-		
 	}
 
 
