@@ -120,6 +120,7 @@ public class UsuarioController {
 		Long dataNasc = json.get("data_nasc").asLong();
 		Double valor_mensalidade = json.get("mensalidade").asDouble();
 		Long data_vcto = json.get("data_vencimento").asLong();
+		Boolean idAutorizacao = json.get("autorizacao").asBoolean();
 		
 		Date dataNascimento = new Date(dataNasc);
 		Date data_vencimento = new Date(data_vcto);
@@ -132,6 +133,17 @@ public class UsuarioController {
 		usuario.setData_nascimento(dataNascimento);
 		usuario.setValor_mensalidade(valor_mensalidade);
 		usuario.setDataVencimento(data_vencimento);
+		usuario.setIs_admin(idAutorizacao);
+		
+		Autorizacao a;
+		if(idAutorizacao) {
+			a = autorizacaoService.buscarPorNome("ROLE_ADMIN");			
+		}else {
+			a = autorizacaoService.buscarPorNome("ROLE_USER");	
+		}			
+		List<Autorizacao> listaAut = new ArrayList<Autorizacao>();
+		listaAut.add(a);
+		usuario.setAutorizacoes(listaAut);
 		
 		usuarioService.salvar(usuario);
 		HttpHeaders responseHeaders = new HttpHeaders();
