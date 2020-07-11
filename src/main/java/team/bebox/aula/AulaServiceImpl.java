@@ -1,11 +1,13 @@
 package team.bebox.aula;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +42,17 @@ public class AulaServiceImpl implements AulaService{
 	@Override
 	public Collection<Aula> buscarTodas(int idAluno){
 		Date date = new Date();
+		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+		TimeZone.setDefault(tz);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
 		Usuario aluno = alunoService.buscarPorId(idAluno);
-		
+		try {
+			date = new Date(simpleDateFormat.parse(date.toString()).toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaAsc();
 		Collection<Aula> remover = new ArrayList<Aula>();
 		for(Aula a: aulas) {
