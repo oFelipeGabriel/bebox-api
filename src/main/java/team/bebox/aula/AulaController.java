@@ -48,25 +48,25 @@ public class AulaController {
 	public AulaResponse buscar(@PathVariable("aluno") int idAluno){
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
-//		if(aluno.getAulaChecked() != null) {
-//        	String data[] = aluno.getAulaChecked().split("=");
-//            String diaMesAno[] = data[0].split("-");
-//            String horaMin[] = data[1].split(":");
-//            int dia = Integer.parseInt(diaMesAno[2]);
-//            int mes = Integer.parseInt(diaMesAno[1]);
-//            int ano = Integer.parseInt(diaMesAno[0]);
-//            int hora = Integer.parseInt(horaMin[0]);
-//            int min = Integer.parseInt(horaMin[1]);
-////            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-////    		TimeZone.setDefault(tz);
-//            GregorianCalendar gc = new GregorianCalendar( ano, mes, dia, hora, min );
-////            gc.setTimeZone(tz);
-//            GregorianCalendar gc2 = new GregorianCalendar();
-//            if(gc2.after(gc)) {
-//            	usuarioServiceImpl.uncheckAulaToUser(aluno);
-//            }
-//            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
-//        }
+		if(aluno.getAulaChecked() != null) {
+        	String data[] = aluno.getAulaChecked().split("=");
+            String diaMesAno[] = data[0].split("-");
+            String horaMin[] = data[1].split(":");
+            int dia = Integer.parseInt(diaMesAno[2]);
+            int mes = Integer.parseInt(diaMesAno[1]);
+            int ano = Integer.parseInt(diaMesAno[0]);
+            int hora = Integer.parseInt(horaMin[0]);
+            int min = Integer.parseInt(horaMin[1]);
+//            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+//    		TimeZone.setDefault(tz);
+            GregorianCalendar gc = new GregorianCalendar( ano, mes, dia, hora, min );
+//            gc.setTimeZone(tz);
+            GregorianCalendar gc2 = new GregorianCalendar();
+            if(gc2.after(gc)) {
+            	usuarioServiceImpl.uncheckAulaToUser(aluno);
+            }
+            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
+        }
 		return new AulaResponse(aluno, aulas);
 	}
 	
