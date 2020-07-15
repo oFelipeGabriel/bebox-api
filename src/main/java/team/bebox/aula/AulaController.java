@@ -57,10 +57,10 @@ public class AulaController {
             int ano = Integer.parseInt(diaMesAno[0]);
             int hora = Integer.parseInt(horaMin[0]);
             int min = Integer.parseInt(horaMin[1]);
-            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-    		TimeZone.setDefault(tz);
+//            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+//    		TimeZone.setDefault(tz);
             GregorianCalendar gc = new GregorianCalendar( ano, mes, dia, hora, min );
-            gc.setTimeZone(tz);
+//            gc.setTimeZone(tz);
             GregorianCalendar gc2 = new GregorianCalendar();
             if(gc2.after(gc)) {
             	usuarioServiceImpl.uncheckAulaToUser(aluno);
