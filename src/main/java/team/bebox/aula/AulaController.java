@@ -67,9 +67,6 @@ public class AulaController {
             }
             aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
         }
-		if(aluno.getAulaChecked()!=null) {
-			aulas = aulaServiceImpl.buscaPorAlunoId(idAluno);
-		}
 		return new AulaResponse(aluno, aulas);
 	}
 	
