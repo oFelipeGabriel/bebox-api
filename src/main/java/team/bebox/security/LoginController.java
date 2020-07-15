@@ -23,8 +23,7 @@ public class LoginController {
 
     @Autowired
     private AuthenticationManager auth;
-
-
+    
     //@JsonView(View.UsuarioResumo.class)
     @CrossOrigin
     @RequestMapping(path = "/logando", method = RequestMethod.POST)   
@@ -36,6 +35,8 @@ public class LoginController {
         response.setHeader("Access-Control-Allow-Headers", 
         		"Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, class-name, " +
                 "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Expose-Headers");
+        
+        
         return new ResponseEntity<Usuario>(usuario,HttpStatus.OK);
     }
 

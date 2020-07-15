@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import team.bebox.user.Usuario;
@@ -20,12 +21,12 @@ public class AulaResponse {
 	public AulaResponse(Usuario aluno, Collection<Aula> aulasColl) {
 		super();
 		this.aulasCollection = aulasColl;
-		Date dataCheck = new Date();
+		GregorianCalendar dataCheck = null;
 		if(aluno.getAulaChecked()!=null && aluno.getAulaChecked()!="") {
 			this.checked = aluno.getAulaChecked();
 			String[] dataCheckStr = aluno.getAulaChecked().split("=")[0].split("-");
 			String[] horasCheckStr = aluno.getAulaChecked().split("=")[1].split(":");
-			dataCheck = new Date(Integer.parseInt(dataCheckStr[0]), 
+			dataCheck = new GregorianCalendar(Integer.parseInt(dataCheckStr[0]), 
 					Integer.parseInt(dataCheckStr[1])-1, 
 					Integer.parseInt(dataCheckStr[2]),
 					Integer.parseInt(horasCheckStr[0]),
@@ -33,7 +34,23 @@ public class AulaResponse {
 		}
 		this.checked = aluno.getAulaChecked();
 		aulas = new ArrayList<>();
-		if(aulasColl.isEmpty()==false) {
+		if(dataCheck!=null) {
+			Aula a = aulasColl.iterator().next();
+			ArrayList<Integer> idAlunos = new ArrayList<>();
+			for(Usuario al : a.getAlunos()) {
+				idAlunos.add(al.getId());
+			}
+			AulaResumo ar = new AulaResumo(
+					a.getId(), 
+					a.getDia(), 
+					a.getHora(),
+					a.getQuantidade(),
+					a.getChecked(),
+					idAlunos
+					);
+			aulas.add(ar);
+		}
+		if(aulasColl.isEmpty()==false && dataCheck==null) {
 			for(Aula a : aulasColl) {
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
@@ -48,10 +65,6 @@ public class AulaResponse {
 						a.getChecked(),
 						idAlunos
 						);
-//				if(this.checked!="") {
-//					this.comparaDataChecada(dataCheck, a.getDia(), a.getHora());
-//				}
-				
 				aulas.add(ar);
 			}
 		}
@@ -60,12 +73,6 @@ public class AulaResponse {
 	}
 	
 	
-	
-	private boolean comparaDataChecada(Date dataCheck, java.sql.Date dia, String hora) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 
 
 	public AulaResponse() {
@@ -75,6 +82,7 @@ public class AulaResponse {
 
 
 
+	@SuppressWarnings("deprecation")
 	private void comparaDatas(Date vencimento) {
 		Calendar dataAtual = Calendar.getInstance();
 		vencimento.setHours(vencimento.getHours()+3);

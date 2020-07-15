@@ -76,6 +76,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 		user.setAulaChecked(diaHora);
 		usuarioRepository.save(user);
 	}
+	public void uncheckAulaToUser(Usuario user) {
+		user.setAulaChecked(null);
+		usuarioRepository.save(user);
+	}
 	
 	@Override
 	public Collection<Usuario> getUsuarios(){

@@ -1,6 +1,5 @@
 package team.bebox.aula;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,12 +46,7 @@ public class AulaServiceImpl implements AulaService{
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
 		Usuario aluno = alunoService.buscarPorId(idAluno);
-		try {
-			date = new Date(simpleDateFormat.parse(date.toString()).toString());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaAsc();
 		Collection<Aula> remover = new ArrayList<Aula>();
 		for(Aula a: aulas) {
@@ -94,7 +88,7 @@ public class AulaServiceImpl implements AulaService{
 	
 	@Override
 	public List<Aula> buscaPorAlunoId(Integer id){
-		return aulaRepo.findByAlunos_Id(id);
+		return aulaRepo.findByAlunos_IdOrderByDiaDesc(id);
 	}
 	public Collection<Aula> buscarTodasDone() {
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaDesc();

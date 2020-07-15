@@ -10,6 +10,6 @@ import team.bebox.aula.Aula;
 public interface AulaRepository extends CrudRepository<Aula, Integer>{
 	Collection<Aula> findAllByOrderByDiaAsc();
 	Collection<Aula> findAllByOrderByDiaDesc();
-	List<Aula> findByAlunos_Id(Integer id);
+	List<Aula> findByAlunos_IdOrderByDiaDesc(Integer id);
 
 }

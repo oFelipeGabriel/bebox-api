@@ -2,6 +2,10 @@ package team.bebox.aula;
 
 import java.sql.Date;
 import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,6 +48,28 @@ public class AulaController {
 	public AulaResponse buscar(@PathVariable("aluno") int idAluno){
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
+		if(aluno.getAulaChecked() != null) {
+        	String data[] = aluno.getAulaChecked().split("=");
+            String diaMesAno[] = data[0].split("-");
+            String horaMin[] = data[1].split(":");
+            int dia = Integer.parseInt(diaMesAno[2]);
+            int mes = Integer.parseInt(diaMesAno[1]);
+            int ano = Integer.parseInt(diaMesAno[0]);
+            int hora = Integer.parseInt(horaMin[0]);
+            int min = Integer.parseInt(horaMin[1]);
+            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+    		TimeZone.setDefault(tz);
+            GregorianCalendar gc = new GregorianCalendar( ano, mes, dia, hora, min );
+            gc.setTimeZone(tz);
+            GregorianCalendar gc2 = new GregorianCalendar();
+            if(gc2.after(gc)) {
+            	usuarioServiceImpl.uncheckAulaToUser(aluno);
+            }
+            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
+        }
+		if(aluno.getAulaChecked()!=null) {
+			aulas = aulaServiceImpl.buscaPorAlunoId(idAluno);
+		}
 		return new AulaResponse(aluno, aulas);
 	}
 	
@@ -67,6 +93,8 @@ public class AulaController {
 	@CrossOrigin
 	@RequestMapping(value = "/novaAula", method = RequestMethod.POST)
 	public ResponseEntity<Aula> nova(@RequestBody ObjectNode json){
+		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+		TimeZone.setDefault(tz);
 		Long dia = json.get("dia").asLong();
 		String hora = json.get("hora").asText();
 		String quantidade = json.get("quantidade").asText();
@@ -86,10 +114,11 @@ public class AulaController {
 	@PostMapping("/addAluno/{aula}/{aluno}/")
 	@ResponseBody
 	public AulaResponse addAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int idAluno){
-		Usuario user = usuarioServiceImpl.buscarPorId(idAluno);
+		Usuario user = usuarioServiceImpl.buscarPorId(idAluno);		
 		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
 		usuarioServiceImpl.checkAulaToUser(user, a);
-		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
+		
+		Collection<Aula> aulas = aulaServiceImpl.buscaPorAlunoId(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
 		return new AulaResponse(aluno, aulas);
 	}
@@ -99,8 +128,11 @@ public class AulaController {
 	@PostMapping("/removeAluno/{aula}/{aluno}/")
 	@ResponseBody
 	public AulaResponse removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
+		
+		Usuario u = usuarioServiceImpl.buscarPorId(aluno);
+		usuarioServiceImpl.uncheckAulaToUser(u);
+		
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
-		Usuario u = usuarioServiceImpl.buscarPorId(aluno);		
 		aulaServiceImpl.removeAluno(a, u);
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(aluno);
 		return new AulaResponse(u, aulas);
