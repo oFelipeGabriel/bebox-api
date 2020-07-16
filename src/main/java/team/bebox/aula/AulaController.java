@@ -1,9 +1,12 @@
 package team.bebox.aula;
 
-import java.sql.Date;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,10 @@ public class AulaController {
 	@Autowired
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
+	public static final String inputFormat = "HH:mm";
+	SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
+	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+	
 
 	//@PreAuthorize("hasRole('ROLE_USER')")
 	@CrossOrigin
@@ -48,25 +55,29 @@ public class AulaController {
 	public AulaResponse buscar(@PathVariable("aluno") int idAluno){
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
-//		if(aluno.getAulaChecked() != null) {
-//        	String data[] = aluno.getAulaChecked().split("=");
-//            String diaMesAno[] = data[0].split("-");
-//            String horaMin[] = data[1].split(":");
-//            int dia = Integer.parseInt(diaMesAno[2]);
-//            int mes = Integer.parseInt(diaMesAno[1]);
-//            int ano = Integer.parseInt(diaMesAno[0]);
-//            int hora = Integer.parseInt(horaMin[0]);
-//            int min = Integer.parseInt(horaMin[1]);
-////            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-////    		TimeZone.setDefault(tz);
-////            GregorianCalendar gc = new GregorianCalendar( ano, mes, dia, hora, min );
-//////            gc.setTimeZone(tz);
-////            GregorianCalendar gc2 = new GregorianCalendar();
-////            if(gc2.after(gc)) {
-////            	usuarioServiceImpl.uncheckAulaToUser(aluno);
-////            }
-//            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
-//        }
+		if(aluno.getAulaChecked() != null) {
+        	String dataCheck[] = aluno.getAulaChecked().split(" ");
+        	String diaCheck = dataCheck[0];
+        	String horaCheck = dataCheck[1];
+			Calendar now = Calendar.getInstance();
+		    int hour = now.get(Calendar.HOUR);
+		    int minute = now.get(Calendar.MINUTE);
+		    Date date = parseDate(hour + ":" + minute);
+		    Date dataAulaCheck = parseDate(horaCheck);
+        	
+        	Date hoje = new Date();
+            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+    		TimeZone.setDefault(tz);
+            try {
+				if(hoje.after(sdformat.parse(diaCheck)) && date.after(dataAulaCheck)) {
+					usuarioServiceImpl.uncheckAulaToUser(aluno);
+				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
+        }
 		return new AulaResponse(aluno, aulas);
 	}
 	
@@ -95,7 +106,7 @@ public class AulaController {
 		Long dia = json.get("dia").asLong();
 		String hora = json.get("hora").asText();
 		String quantidade = json.get("quantidade").asText();
-		Date d = new Date(dia);
+		java.sql.Date d = new java.sql.Date(dia);
 		Aula a = new Aula();
 		a.setDia(d);
 		a.setHora(hora);
@@ -133,5 +144,14 @@ public class AulaController {
 		aulaServiceImpl.removeAluno(a, u);
 		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(aluno);
 		return new AulaResponse(u, aulas);
+	}
+	
+	private Date parseDate(String date) {
+
+	    try {
+	        return inputParser.parse(date);
+	    } catch (java.text.ParseException e) {
+	        return new Date(0);
+	    }
 	}
 }

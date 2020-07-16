@@ -72,8 +72,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	public void checkAulaToUser(Usuario user, Aula aula) {
-		String diaHora = aula.getDia().toString()+"="+aula.getHora();
-		user.setAulaChecked(diaHora);
+		user.setAulaChecked(aula.getDia()+" "+aula.getHora());
 		usuarioRepository.save(user);
 	}
 	public void uncheckAulaToUser(Usuario user) {

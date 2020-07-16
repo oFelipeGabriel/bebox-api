@@ -1,12 +1,13 @@
 package team.bebox.aula;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import team.bebox.user.Usuario;
 
@@ -17,40 +18,45 @@ public class AulaResponse {
 	String classe;
 	String checked;
 	ArrayList<AulaResumo> aulas = new ArrayList<>();
+	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public AulaResponse(Usuario aluno, Collection<Aula> aulasColl) {
 		super();
+		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+		TimeZone.setDefault(tz);
+		
 		this.aulasCollection = aulasColl;
-		GregorianCalendar dataCheck = null;
-		if(aluno.getAulaChecked()!=null && aluno.getAulaChecked()!="") {
-			this.checked = aluno.getAulaChecked();
-			String[] dataCheckStr = aluno.getAulaChecked().split("=")[0].split("-");
-			String[] horasCheckStr = aluno.getAulaChecked().split("=")[1].split(":");
-			dataCheck = new GregorianCalendar(Integer.parseInt(dataCheckStr[0]), 
-					Integer.parseInt(dataCheckStr[1])-1, 
-					Integer.parseInt(dataCheckStr[2]),
-					Integer.parseInt(horasCheckStr[0]),
-					Integer.parseInt(horasCheckStr[1]));
-		}
 		this.checked = aluno.getAulaChecked();
+		if(aluno.getAulaChecked()!=null) {
+			Date hoje = new Date();
+			String dataCheck[] = aluno.getAulaChecked().split(" ");
+	    	String diaCheck = dataCheck[0];
+			try {
+				hoje.after(sdformat.parse(diaCheck));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		aulas = new ArrayList<>();
-//		if(dataCheck!=null) {
-//			Aula a = aulasColl.iterator().next();
-//			ArrayList<Integer> idAlunos = new ArrayList<>();
-//			for(Usuario al : a.getAlunos()) {
-//				idAlunos.add(al.getId());
-//			}
-//			AulaResumo ar = new AulaResumo(
-//					a.getId(), 
-//					a.getDia(), 
-//					a.getHora(),
-//					a.getQuantidade(),
-//					a.getChecked(),
-//					idAlunos
-//					);
-//			aulas.add(ar);
-//		}
-		if(aulasColl.isEmpty()==false ) {
+		if(aluno.getAulaChecked()!=null) {
+			Aula a = aulasColl.iterator().next();
+			ArrayList<Integer> idAlunos = new ArrayList<>();
+			for(Usuario al : a.getAlunos()) {
+				idAlunos.add(al.getId());
+			}
+			AulaResumo ar = new AulaResumo(
+					a.getId(), 
+					a.getDia(), 
+					a.getHora(),
+					a.getQuantidade(),
+					a.getChecked(),
+					idAlunos
+					);
+			aulas.add(ar);
+		}
+		if(aulasColl.isEmpty()==false && aluno.getAulaChecked()==null) {
 			for(Aula a : aulasColl) {
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
@@ -163,8 +169,6 @@ public class AulaResponse {
 	public String getChecked() {
 		return checked;
 	}
-
-
 
 	public void setChecked(String checked) {
 		this.checked = checked;
