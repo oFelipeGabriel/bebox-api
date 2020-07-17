@@ -2,13 +2,15 @@ package team.bebox.user;
 
 import java.util.Collection;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import team.bebox.user.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+public interface UsuarioRepository extends PagingAndSortingRepository<Usuario, Integer> {
     Usuario findByEmail(String email);
     Usuario findByNome(String nome);
 
@@ -20,4 +22,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	Usuario findFirstByCpf(String login);
 	
 	Collection<Usuario> findByStatus(Boolean status);
+	Page<Usuario> findAll(Pageable pageable);
 }

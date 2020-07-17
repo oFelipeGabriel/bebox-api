@@ -88,6 +88,15 @@ public class AulaController {
 	public ResponseEntity<Collection<Aula>> buscarFiltrada(){
 		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
 	}
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@CrossOrigin
+	@JsonView(View.UsuarioBase.class)
+	@RequestMapping(value = "/addAlunoExperimental/{aula}", method = RequestMethod.POST)
+	public ResponseEntity<Collection<Aula>> addAlunoExperimental(@PathVariable("aula") int aula){
+		Usuario user = usuarioServiceImpl.buscarPorId(1);		
+		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
+		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
+	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
@@ -135,8 +144,7 @@ public class AulaController {
 	@CrossOrigin
 	@PostMapping("/removeAluno/{aula}/{aluno}/")
 	@ResponseBody
-	public AulaResponse removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){
-		
+	public AulaResponse removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){		
 		Usuario u = usuarioServiceImpl.buscarPorId(aluno);
 		usuarioServiceImpl.uncheckAulaToUser(u);
 		

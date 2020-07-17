@@ -1,11 +1,9 @@
 package team.bebox.user;
 
-import java.util.Collection;
-
 public interface UsuarioService {
 	public Usuario salvar(Usuario usuario);
 	public Usuario excluir(Usuario usuario);
 	public Usuario editar(Usuario usuario);
-	public Collection<Usuario> getUsuarios();
+	public UsuariosResponse getUsuariosPaginated(int pageNum, int pageSize);
 	public Usuario buscarPorId(Integer id);
 }

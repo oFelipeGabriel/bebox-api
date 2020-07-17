@@ -1,8 +1,10 @@
 package team.bebox.user;
 
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,9 +83,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
-	public Collection<Usuario> getUsuarios(){
-		Collection<Usuario> usuarios = usuarioRepository.findAll();
-    	return usuarios;
+	public UsuariosResponse getUsuariosPaginated(int pageNo, int pageSize){
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Usuario> usuarios = usuarioRepository.findAll(paging);
+		int prev = 0, next = 0;
+		if(usuarios.hasNext()){
+			next = pageNo+1;
+		}
+		if(usuarios.hasPrevious()) {
+			prev = pageNo-1;
+		}
+    	return new UsuariosResponse(usuarios.getContent(), next, prev, usuarios.getTotalPages());
 	}
 
+	public class AlunosRetorno{
+		
+	}
 }
+

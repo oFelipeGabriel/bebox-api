@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +47,8 @@ public class AulaServiceImpl implements AulaService{
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
 		Usuario aluno = alunoService.buscarPorId(idAluno);
-		
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaAsc();
+
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAll(Sort.by("dia").and(Sort.by("hora")));
 		Collection<Aula> remover = new ArrayList<Aula>();
 		for(Aula a: aulas) {
 			if(simpleDateFormat.format(date).compareTo(a.getDia().toString()) > 0) {
@@ -91,7 +92,7 @@ public class AulaServiceImpl implements AulaService{
 		return aulaRepo.findByAlunos_IdOrderByDiaDesc(id);
 	}
 	public Collection<Aula> buscarTodasDone() {
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAllByOrderByDiaDesc();
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAll(Sort.by("dia").and(Sort.by("hora")));
 		return aulas;
 	}
 

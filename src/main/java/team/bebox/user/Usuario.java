@@ -59,29 +59,37 @@ public class Usuario implements UserDetails{
 	@Column
 	private String foto;
 	
+	@JsonView(View.UsuarioView.class)
 	@Column
 	private Boolean is_admin;
 	
+	@JsonView(View.UsuarioView.class)
 	@Column
 	private String endereco;
 	
+	@JsonView(View.UsuarioView.class)
 	@Column
 	private String telefone;
 	
+	@JsonView(View.UsuarioView.class)
 	@JsonFormat(pattern="dd/MM/yyyy")
 	@Column
 	private Date data_nascimento;
 
+	@JsonView(View.UsuarioView.class)
     @Column(name = "cpf")
     private String cpf;
     
+	@JsonView(View.UsuarioView.class)
     @Column
     private Double valor_mensalidade;
     
+	@JsonView(View.UsuarioView.class)
     @JsonFormat(pattern="dd/MM/yyyy")
     @Column
     private Date data_pagamento;
     
+	@JsonView(View.UsuarioView.class)
     @JsonFormat(pattern="dd/MM/yyyy")
     @Column 
     private Date dataVencimento;

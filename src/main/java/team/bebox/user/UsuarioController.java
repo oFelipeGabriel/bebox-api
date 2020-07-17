@@ -169,11 +169,13 @@ public class UsuarioController {
 		return true;
 	}
 
+	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
-	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
-	public ResponseEntity<Collection<Usuario>> getAll() {
-		return new ResponseEntity<Collection<Usuario>>(usuarioService.todosUsuarios(), HttpStatus.OK);
+	@RequestMapping(value = "/getAll/{pageNo}/{pageSize}", method = RequestMethod.GET)
+	public UsuariosResponse getAll(@PathVariable int pageNo, 
+            @PathVariable int pageSize) {
+		return usuarioService.getUsuariosPaginated(pageNo, pageSize);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
