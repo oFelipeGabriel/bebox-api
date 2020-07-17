@@ -76,7 +76,9 @@ public class AulaController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
+            //aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
+            aulas = aulaServiceImpl.findAll();
+            
         }
 		return new AulaResponse(aluno, aulas);
 	}

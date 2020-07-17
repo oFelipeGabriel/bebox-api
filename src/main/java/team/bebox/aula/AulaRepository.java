@@ -13,5 +13,6 @@ public interface AulaRepository extends CrudRepository<Aula, Integer>{
 	Collection<Aula> findAllByOrderByDiaDesc();
 	List<Aula> findByAlunos_IdOrderByDiaDesc(Integer id);
 	Collection<Aula> findAll(Sort by);
+	//List<Aula> findAllOrderByDiaDesc(Integer id);
 
 }

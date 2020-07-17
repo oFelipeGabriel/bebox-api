@@ -105,4 +105,10 @@ public class AulaServiceImpl implements AulaService{
 		aulaRepo.delete(aula);
 		return aulaRepo.findAllByOrderByDiaDesc();
 	}
+
+
+	public Collection<Aula> findAll() {
+		// TODO Auto-generated method stub
+		return (Collection<Aula>) aulaRepo.findAll();
+	}
 }

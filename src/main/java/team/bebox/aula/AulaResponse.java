@@ -40,23 +40,27 @@ public class AulaResponse {
 		}
 		
 		aulas = new ArrayList<>();
-		if(aluno.getAulaChecked()!=null) {
-			Aula a = aulasColl.iterator().next();
-			ArrayList<Integer> idAlunos = new ArrayList<>();
-			for(Usuario al : a.getAlunos()) {
-				idAlunos.add(al.getId());
-			}
-			AulaResumo ar = new AulaResumo(
-					a.getId(), 
-					a.getDia(), 
-					a.getHora(),
-					a.getQuantidade(),
-					a.getChecked(),
-					idAlunos
-					);
-			aulas.add(ar);
-		}
-		if(aulasColl.isEmpty()==false && aluno.getAulaChecked()==null) {
+//		if(aluno.getAulaChecked()!=null) {
+//			System.out.println(aulasColl.toArray().length);
+//			if(aulasColl!=null && aulasColl.toArray().length>0) {
+//				Aula a = aulasColl;;
+//				ArrayList<Integer> idAlunos = new ArrayList<>();
+//				for(Usuario al : a.getAlunos()) {
+//					idAlunos.add(al.getId());
+//				}
+//				AulaResumo ar = new AulaResumo(
+//						a.getId(), 
+//						a.getDia(), 
+//						a.getHora(),
+//						a.getQuantidade(),
+//						a.getChecked(),
+//						idAlunos
+//						);
+//				aulas.add(ar);
+//			}
+//			
+//		}
+		if(aulasColl.isEmpty()==false) {
 			for(Aula a : aulasColl) {
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
