@@ -53,9 +53,10 @@ public class AulaServiceImpl implements AulaService{
 		
 		String diaCheck = "";
 		String horaCheck = "";
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo
-				.findAll(Sort.by(Sort.Direction.ASC, "dia")
-						.and(Sort.by(Sort.Direction.ASC, "hora")));
+		Collection<Aula> aulas = aulaRepo.findAllByOrderByDiaDesc();
+//		Collection<Aula> aulas = (Collection<Aula>) aulaRepo
+//				.findAll(Sort.by(Sort.Direction.ASC, "dia")
+//						.and(Sort.by(Sort.Direction.ASC, "hora")));
 		Collection<Aula> remover = new ArrayList<Aula>();
 		if(aluno.getAulaChecked()!=null) {			
 			String dataCheck[] = aluno.getAulaChecked().split(" ");
