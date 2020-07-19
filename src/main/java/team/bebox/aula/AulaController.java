@@ -52,6 +52,23 @@ public class AulaController {
 	@GetMapping("/getAll/{aluno}")
 	@ResponseBody
 	public AulaResponse buscar(@PathVariable("aluno") int idAluno){
+		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
+		if(aluno.getAulaChecked()!=null) {
+			Date hoje = new Date();
+			String dataCheck[] = aluno.getAulaChecked().split(" ");
+	    	String diaCheck = dataCheck[0];
+	    	String horaString = hourFormat.format(hoje);
+	    	try {
+	    		Date horaDate = hourFormat.parse(horaString);
+				Date horaCheck = hourFormat.parse(dataCheck[1]);
+				if(hoje.after(sdformat.parse(diaCheck)) && horaDate.after(horaCheck)) {
+					usuarioServiceImpl.uncheckAulaToUser(aluno);
+				}	
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
 		
 		return aulas;
