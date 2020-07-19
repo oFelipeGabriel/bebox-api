@@ -19,8 +19,8 @@ public interface AulaService {
 
 	Aula removeAluno(Aula aula, Usuario usuario);
 	
-	List<Aula> buscaPorAlunoId(Integer id);
+	Collection<Aula> buscaPorAlunoId(Integer id);
 
-	Collection<Aula> buscarTodas(int idAluno);
+	AulaResponse buscarTodas(int idAluno);
 
 }

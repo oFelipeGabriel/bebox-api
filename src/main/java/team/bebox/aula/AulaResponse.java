@@ -1,6 +1,5 @@
 package team.bebox.aula;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,42 +24,30 @@ public class AulaResponse {
 		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
 		TimeZone.setDefault(tz);
 		
-		this.aulasCollection = aulasColl;
-		this.checked = aluno.getAulaChecked();
-		if(aluno.getAulaChecked()!=null) {
-			Date hoje = new Date();
-			String dataCheck[] = aluno.getAulaChecked().split(" ");
-	    	String diaCheck = dataCheck[0];
-			try {
-				hoje.after(sdformat.parse(diaCheck));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
+		this.checked = aluno.getAulaChecked();		
 		
 		aulas = new ArrayList<>();
-//		if(aluno.getAulaChecked()!=null) {
-//			System.out.println(aulasColl.toArray().length);
-//			if(aulasColl!=null && aulasColl.toArray().length>0) {
-//				Aula a = aulasColl;;
-//				ArrayList<Integer> idAlunos = new ArrayList<>();
-//				for(Usuario al : a.getAlunos()) {
-//					idAlunos.add(al.getId());
-//				}
-//				AulaResumo ar = new AulaResumo(
-//						a.getId(), 
-//						a.getDia(), 
-//						a.getHora(),
-//						a.getQuantidade(),
-//						a.getChecked(),
-//						idAlunos
-//						);
-//				aulas.add(ar);
-//			}
-//			
-//		}
-		if(aulasColl.isEmpty()==false) {
+		if(aluno.getAulaChecked()!=null) {
+			if(aulasColl!=null && aulasColl.toArray().length>0) {
+				Aula a = aulasColl.iterator().next();
+				ArrayList<Integer> idAlunos = new ArrayList<>();
+				for(Usuario al : a.getAlunos()) {
+					idAlunos.add(al.getId());
+				}
+				AulaResumo ar = new AulaResumo(
+						a.getId(), 
+						a.getDia(), 
+						a.getHora(),
+						a.getQuantidade(),
+						a.getChecked(),
+						idAlunos
+						);
+				aulas.add(ar);
+			}
+			
+		}
+		if(aulasColl.isEmpty()==false && aluno.getAulaChecked()==null) {
 			for(Aula a : aulasColl) {
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
@@ -78,7 +65,6 @@ public class AulaResponse {
 				aulas.add(ar);
 			}
 		}
-		
 		this.comparaDatas(aluno.getDataVencimento());
 	}
 	

@@ -33,7 +33,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public Usuario excluir(Usuario usuario) {
 		usuario.setStatus(false);
-		List<Aula> aulas = aulaService.buscaPorAlunoId(usuario.getId());
+		Collection<Aula> aulas = aulaService.buscaPorAlunoId(usuario.getId());
 		Date hoje = new Date();
 		for(Aula a : aulas) {
 			if(a.getDia().compareTo(hoje) < 0) {

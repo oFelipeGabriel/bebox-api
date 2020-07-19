@@ -3,7 +3,6 @@ package team.bebox.aula;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
@@ -44,43 +43,35 @@ public class AulaController {
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
 	public static final String inputFormat = "HH:mm";
-	SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
-	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
+	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 	
 
-	//@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@CrossOrigin
 	@GetMapping("/getAll/{aluno}")
 	@ResponseBody
 	public AulaResponse buscar(@PathVariable("aluno") int idAluno){
-		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(idAluno);
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
-		if(aluno.getAulaChecked() != null) {
-        	String dataCheck[] = aluno.getAulaChecked().split(" ");
-        	String diaCheck = dataCheck[0];
-        	String horaCheck = dataCheck[1];
-			Calendar now = Calendar.getInstance();
-		    int hour = now.get(Calendar.HOUR);
-		    int minute = now.get(Calendar.MINUTE);
-		    Date date = parseDate(hour + ":" + minute);
-		    Date dataAulaCheck = parseDate(horaCheck);
-        	
-        	Date hoje = new Date();
-            TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-    		TimeZone.setDefault(tz);
-            try {
-				if(hoje.after(sdformat.parse(diaCheck)) && date.after(dataAulaCheck)) {
+		if(aluno.getAulaChecked()!=null) {
+			Date hoje = new Date();
+			String dataCheck[] = aluno.getAulaChecked().split(" ");
+	    	String diaCheck = dataCheck[0];
+	    	String horaString = hourFormat.format(hoje);
+	    	try {
+	    		Date horaDate = hourFormat.parse(horaString);
+				Date horaCheck = hourFormat.parse(dataCheck[1]);
+				if(hoje.after(sdformat.parse(diaCheck)) && horaDate.after(horaCheck)) {
 					usuarioServiceImpl.uncheckAulaToUser(aluno);
-				}
-			} catch (ParseException e) {
+				}	
+			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
-            //aulas = aulaServiceImpl.buscaPorAlunoId(aluno.getId());
-            aulas = aulaServiceImpl.findAll();
-            
-        }
-		return new AulaResponse(aluno, aulas);
+		}
+		AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
+		
+		return aulas;
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -95,8 +86,6 @@ public class AulaController {
 	@JsonView(View.UsuarioBase.class)
 	@RequestMapping(value = "/addAlunoExperimental/{aula}", method = RequestMethod.POST)
 	public ResponseEntity<Collection<Aula>> addAlunoExperimental(@PathVariable("aula") int aula){
-		Usuario user = usuarioServiceImpl.buscarPorId(1);		
-		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
 		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
 	}
 	
@@ -137,9 +126,8 @@ public class AulaController {
 		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
 		usuarioServiceImpl.checkAulaToUser(user, a);
 		
-		Collection<Aula> aulas = aulaServiceImpl.buscaPorAlunoId(idAluno);
-		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
-		return new AulaResponse(aluno, aulas);
+		AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
+		return aulas;
 	}
 
 	@PreAuthorize("isAuthenticated()")
@@ -152,16 +140,7 @@ public class AulaController {
 		
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
 		aulaServiceImpl.removeAluno(a, u);
-		Collection<Aula> aulas = aulaServiceImpl.buscarTodas(aluno);
-		return new AulaResponse(u, aulas);
+		return aulaServiceImpl.buscarTodas(aluno);
 	}
 	
-	private Date parseDate(String date) {
-
-	    try {
-	        return inputParser.parse(date);
-	    } catch (java.text.ParseException e) {
-	        return new Date(0);
-	    }
-	}
 }

@@ -1,5 +1,6 @@
 package team.bebox.aula;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ public class AulaServiceImpl implements AulaService{
 	public Aula salvar(Aula aula) {
 		return aulaRepo.save(aula);
 	}
-	
+	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
 	public Collection<Aula> buscarTodas() {
@@ -40,28 +41,60 @@ public class AulaServiceImpl implements AulaService{
 
 
 	@Override
-	public Collection<Aula> buscarTodas(int idAluno){
-		Date date = new Date();
+	public AulaResponse buscarTodas(int idAluno){
+		Date hoje = new Date();
 		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
 		TimeZone.setDefault(tz);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
 		Usuario aluno = alunoService.buscarPorId(idAluno);
-
-		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAll(Sort.by("dia").and(Sort.by("hora")));
+		Boolean temCheckin = false;
+		
+		String diaCheck = "";
+		String horaCheck = "";
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo
+				.findAll(Sort.by(Sort.Direction.ASC, "dia")
+						.and(Sort.by(Sort.Direction.ASC, "hora")));
 		Collection<Aula> remover = new ArrayList<Aula>();
-		for(Aula a: aulas) {
-			if(simpleDateFormat.format(date).compareTo(a.getDia().toString()) > 0) {
+		if(aluno.getAulaChecked()!=null) {			
+			String dataCheck[] = aluno.getAulaChecked().split(" ");
+			diaCheck = dataCheck[0];
+			horaCheck = dataCheck[1];
+			try {
+				hoje.before(sdformat.parse(diaCheck));
+				temCheckin = true;
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		for(Aula a: aulas) {			
+			if(temCheckin) {
+				try {
+					if(a.getDia().before(hoje)) {
+						remover.add(a);
+					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
+						remover.add(a);
+					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
+							(!a.getHora().equals(horaCheck))) {
+						remover.add(a);
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if(hoje.after(a.getDia())) {
 				remover.add(a);
-			}else if(simpleDateFormat.format(date).compareTo(a.getDia().toString()) == 0 &&
-					hourFormat.format(date).compareTo(a.getHora())>0){
+			}else if(hoje.compareTo(a.getDia()) == 0 &&
+					hourFormat.format(hoje).compareTo(a.getHora())>0){
 				remover.add(a);
 			}
 		}
-		aulas.removeAll(remover);
+		aulas.removeAll(remover);	
+		
 		AulaResponse response = new AulaResponse(aluno, aulas);
-		System.out.println(response.getClasse());
-		return aulas;
+		return response;
 	}
 	@Override
 	public Optional<Aula> buscarPorId(int id){
@@ -88,8 +121,8 @@ public class AulaServiceImpl implements AulaService{
 	}
 	
 	@Override
-	public List<Aula> buscaPorAlunoId(Integer id){
-		return aulaRepo.findByAlunos_IdOrderByDiaDesc(id);
+	public Collection<Aula> buscaPorAlunoId(Integer id){
+		return aulaRepo.findAll(Sort.by("alunos_id"));
 	}
 	public Collection<Aula> buscarTodasDone() {
 		Collection<Aula> aulas = (Collection<Aula>) aulaRepo.findAll(Sort.by("dia").and(Sort.by("hora")));
