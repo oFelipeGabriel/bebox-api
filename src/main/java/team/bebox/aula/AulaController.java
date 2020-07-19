@@ -55,10 +55,11 @@ public class AulaController {
 		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
 		if(aluno.getAulaChecked()!=null) {
 			Date hoje = new Date();
-			String dataCheck[] = aluno.getAulaChecked().split(" ");
-	    	String diaCheck = dataCheck[0];
-	    	String horaString = hourFormat.format(hoje);
+			
 	    	try {
+	    		String dataCheck[] = aluno.getAulaChecked().split(" ");
+		    	String diaCheck = dataCheck[0];
+		    	String horaString = hourFormat.format(hoje);
 	    		Date horaDate = hourFormat.parse(horaString);
 				Date horaCheck = hourFormat.parse(dataCheck[1]);
 				if(hoje.after(sdformat.parse(diaCheck)) && horaDate.after(horaCheck)) {

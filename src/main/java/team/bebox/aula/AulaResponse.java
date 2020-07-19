@@ -26,10 +26,7 @@ public class AulaResponse {
 	public AulaResponse(Usuario aluno, Collection<Aula> aulasColl) {
 		super();
 		String inputFormat = "yyyy-MM-dd HH:mm";
-		SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
-		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-		TimeZone.setDefault(tz);
-		
+		SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));		
 		
 		this.checked = aluno.getAulaChecked();		
 		
