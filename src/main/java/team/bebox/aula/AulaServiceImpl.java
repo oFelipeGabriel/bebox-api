@@ -32,7 +32,7 @@ public class AulaServiceImpl implements AulaService{
 	public Aula salvar(Aula aula) {
 		return aulaRepo.save(aula);
 	}
-	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	
 	@Override
 	public Collection<Aula> buscarTodas() {
@@ -44,9 +44,8 @@ public class AulaServiceImpl implements AulaService{
 	@Override
 	public AulaResponse buscarTodas(int idAluno){
 		Date hoje = new Date();
-		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
-		TimeZone.setDefault(tz);
 		String inputFormat = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 		SimpleDateFormat dateHourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
 		Usuario aluno = alunoService.buscarPorId(idAluno);
 		Boolean temCheckin = false;
@@ -78,20 +77,20 @@ public class AulaServiceImpl implements AulaService{
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
-//			if(temCheckin) {
-//				try {
-//					if(a.getDia().before(hoje)) {
-//						remover.add(a);
-//					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
-//						remover.add(a);
-//					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
-//							(!a.getHora().equals(horaCheck))) {
-//						remover.add(a);
-//					}
-//				} catch (ParseException e) {
-//					e.printStackTrace();
-//				}
-//			}
+			if(temCheckin) {
+				try {
+					if(a.getDia().before(hoje)) {
+						remover.add(a);
+					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
+						remover.add(a);
+					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
+							(!a.getHora().equals(horaCheck))) {
+						remover.add(a);
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 			if(hoje.after(a.getDia())) {
 				remover.add(a);
 			}else if(hoje.compareTo(a.getDia()) == 0 && horaLimite!=null &&
