@@ -78,21 +78,21 @@ public class AulaServiceImpl implements AulaService{
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
-			if(temCheckin) {
-				try {
-					if(a.getDia().before(hoje)) {
-						remover.add(a);
-					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
-						remover.add(a);
-					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
-							(!a.getHora().equals(horaCheck))) {
-						remover.add(a);
-					}
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			}
-			else if(hoje.after(a.getDia())) {
+//			if(temCheckin) {
+//				try {
+//					if(a.getDia().before(hoje)) {
+//						remover.add(a);
+//					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
+//						remover.add(a);
+//					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
+//							(!a.getHora().equals(horaCheck))) {
+//						remover.add(a);
+//					}
+//				} catch (ParseException e) {
+//					e.printStackTrace();
+//				}
+//			}
+			if(hoje.after(a.getDia())) {
 				remover.add(a);
 			}else if(hoje.compareTo(a.getDia()) == 0 && horaLimite!=null &&
 					hoje.after(horaLimite)){
