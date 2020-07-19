@@ -1,11 +1,13 @@
 package team.bebox.aula;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import team.bebox.user.Usuario;
@@ -19,8 +21,12 @@ public class AulaResponse {
 	ArrayList<AulaResumo> aulas = new ArrayList<>();
 	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	
+	
+	@SuppressWarnings("deprecation")
 	public AulaResponse(Usuario aluno, Collection<Aula> aulasColl) {
 		super();
+		String inputFormat = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
 		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
 		TimeZone.setDefault(tz);
 		
@@ -31,6 +37,14 @@ public class AulaResponse {
 		if(aluno.getAulaChecked()!=null) {
 			if(aulasColl!=null && aulasColl.toArray().length>0) {
 				Aula a = aulasColl.iterator().next();
+				Date horaLimite = null;
+				try {
+					horaLimite = hourFormat.parse(a.getDia()+" "+a.getHora());
+					horaLimite.setMinutes(horaLimite.getMinutes()-30);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
 					idAlunos.add(al.getId());
@@ -43,17 +57,27 @@ public class AulaResponse {
 						a.getChecked(),
 						idAlunos
 						);
+				if(horaLimite != null) {
+					ar.setHoraLimite(horaLimite.getTime());
+				}				
 				aulas.add(ar);
 			}
 			
 		}
 		if(aulasColl.isEmpty()==false && aluno.getAulaChecked()==null) {
+			
 			for(Aula a : aulasColl) {
 				ArrayList<Integer> idAlunos = new ArrayList<>();
 				for(Usuario al : a.getAlunos()) {
 					idAlunos.add(al.getId());
 				}
-				
+				Date horaLimite = null;
+				try {
+					horaLimite = hourFormat.parse(a.getDia()+" "+a.getHora());
+					horaLimite.setMinutes(horaLimite.getMinutes()-30);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}				
 				AulaResumo ar = new AulaResumo(
 						a.getId(), 
 						a.getDia(), 
@@ -62,6 +86,9 @@ public class AulaResponse {
 						a.getChecked(),
 						idAlunos
 						);
+				if(horaLimite!=null) {
+					ar.setHoraLimite(horaLimite.getTime());
+				}				
 				aulas.add(ar);
 			}
 		}
@@ -168,6 +195,7 @@ public class AulaResponse {
 		private Integer id;
 		private Date dia;
 		private String hora;
+		private Long horaLimite;
 		private Integer quantidade;
 		private Integer checked;
 		private List<Integer> alunos;
@@ -224,6 +252,12 @@ public class AulaResponse {
 		}
 		public void setIsChecked(Boolean isChecked) {
 			this.isChecked = isChecked;
+		}
+		public Long getHoraLimite() {
+			return horaLimite;
+		}
+		public void setHoraLimite(Long horaLimite) {
+			this.horaLimite = horaLimite;
 		}
 		
 	}
