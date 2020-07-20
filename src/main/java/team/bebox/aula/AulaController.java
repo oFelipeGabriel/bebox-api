@@ -42,9 +42,10 @@ public class AulaController {
 	@Autowired
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
-	public static final String inputFormat = "HH:mm";
-	SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
+	public static final String inputFormat = "yyyy-MM-dd HH:mm";
 	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
+	SimpleDateFormat dateHourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
+	SimpleDateFormat hourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
 	
 
 	@PreAuthorize("isAuthenticated()")
@@ -59,12 +60,9 @@ public class AulaController {
 	    	try {
 	    		String dataCheck[] = aluno.getAulaChecked().split(" ");
 		    	String diaCheck = dataCheck[0];
-		    	String horaString = hourFormat.format(hoje);
-	    		Date horaDate = hourFormat.parse(horaString);
 				Date horaCheck = hourFormat.parse(dataCheck[1]);
-				if(hoje.after(sdformat.parse(diaCheck)) && horaDate.after(horaCheck)) {
+				if(hoje.after(dateHourFormat.parse(diaCheck+" "+horaCheck))) {
 					usuarioServiceImpl.uncheckAulaToUser(aluno);
-					System.out.println("Removeu checkin");
 				}	
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
