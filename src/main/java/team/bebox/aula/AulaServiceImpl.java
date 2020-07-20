@@ -52,10 +52,10 @@ public class AulaServiceImpl implements AulaService{
 		
 		String diaCheck = "";
 		String horaCheck = "";
-		Collection<Aula> aulas = aulaRepo.findAllByOrderByDiaDesc();
-//		Collection<Aula> aulas = (Collection<Aula>) aulaRepo
-//				.findAll(Sort.by(Sort.Direction.ASC, "dia")
-//						.and(Sort.by(Sort.Direction.ASC, "hora")));
+//		Collection<Aula> aulas = aulaRepo.findAllByOrderByDiaDesc();
+		Collection<Aula> aulas = (Collection<Aula>) aulaRepo
+				.findAll(Sort.by(Sort.Direction.ASC, "dia")
+						.and(Sort.by(Sort.Direction.ASC, "hora")));
 		Collection<Aula> remover = new ArrayList<Aula>();
 		if(aluno.getAulaChecked()!=null) {			
 			String dataCheck[] = aluno.getAulaChecked().split(" ");
@@ -71,6 +71,8 @@ public class AulaServiceImpl implements AulaService{
 		
 		for(Aula a: aulas) {
 			Date horaLimite = null;
+			Date dataHoraAula = null;			
+			String dateFormated = sdformat.format(a.getDia());
 			try {
 				horaLimite = dateHourFormat.parse(a.getDia()+" "+a.getHora());
 				horaLimite.setMinutes(horaLimite.getMinutes()-30);
@@ -78,28 +80,39 @@ public class AulaServiceImpl implements AulaService{
 				e1.printStackTrace();
 			}
 			if(temCheckin) {
-				try {
-					if(a.getDia().before(hoje)) {
-						remover.add(a);
-					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) != 0)  {
-						remover.add(a);
-					}else if(a.getDia().compareTo(sdformat.parse(diaCheck)) == 0 &&
-							(!a.getHora().equals(horaCheck))) {
+				try {					
+					dataHoraAula = dateHourFormat.parse(dateFormated+" "+a.getHora());
+					Date aulaCheck = dateHourFormat.parse(aluno.getAulaChecked());
+					System.out.println("aula: "+dataHoraAula);
+					System.out.println("check: "+aulaCheck);
+					if(dataHoraAula.before(aulaCheck) || 
+							dataHoraAula.after(aulaCheck)) {
+						System.out.println("Dia before hore"+a.getDia());
 						remover.add(a);
 					}
+//					if(a.getDia().before(hoje)) {
+//						System.out.println("Dia before hore"+a.getDia());
+//						remover.add(a);
+//					}else if(hoje.after(dataHoraAula))  {
+//						System.out.println("Dia conpare to hoje"+dataHoraAula);
+//						remover.add(a);
+//					}
+//					System.out.println("HoraCHeck: "+dataHoraAula);
+//					System.out.println("Today: "+hoje);
+//					else if(hoje.after(dataHoraCheck)) {
+//						System.out.println("hoje before to checkin"+a.getDia());
+//						remover.add(a);
+//					}
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-			}
-			if(hoje.after(a.getDia())) {
-				remover.add(a);
-			}else if(hoje.compareTo(a.getDia()) == 0 && horaLimite!=null &&
-					hoje.after(horaLimite)){
+			}else if(hoje.after(a.getDia())){
 				remover.add(a);
 			}
+			
 		}
 		aulas.removeAll(remover);	
-		
+		System.out.println(aulas.size());
 		AulaResponse response = new AulaResponse(aluno, aulas);
 		return response;
 	}
