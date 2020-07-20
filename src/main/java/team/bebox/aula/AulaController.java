@@ -60,7 +60,7 @@ public class AulaController {
 	    	try {
 	    		String dataCheck[] = aluno.getAulaChecked().split(" ");
 		    	String diaCheck = dataCheck[0];
-				Date horaCheck = hourFormat.parse(dataCheck[1]);
+				String horaCheck = dataCheck[1];
 				if(hoje.after(dateHourFormat.parse(diaCheck+" "+horaCheck))) {
 					usuarioServiceImpl.uncheckAulaToUser(aluno);
 				}	
