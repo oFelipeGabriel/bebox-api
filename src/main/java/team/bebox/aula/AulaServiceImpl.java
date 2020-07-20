@@ -44,6 +44,8 @@ public class AulaServiceImpl implements AulaService{
 	@Override
 	public AulaResponse buscarTodas(int idAluno){
 		Date hoje = new Date();
+		TimeZone tz = TimeZone.getTimeZone("America/Sao_Paulo");
+		TimeZone.setDefault(tz);
 		String inputFormat = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 		SimpleDateFormat dateHourFormat = new SimpleDateFormat(inputFormat, new Locale("pt", "BR"));
@@ -116,8 +118,7 @@ public class AulaServiceImpl implements AulaService{
 				}
 			
 		}
-		aulas.removeAll(remover);	
-		System.out.println(aulas.size());
+		aulas.removeAll(remover);
 		AulaResponse response = new AulaResponse(aluno, aulas);
 		return response;
 	}
