@@ -87,7 +87,6 @@ public class AulaServiceImpl implements AulaService{
 					System.out.println("check: "+aulaCheck);
 					if(dataHoraAula.before(aulaCheck) || 
 							dataHoraAula.after(aulaCheck)) {
-						System.out.println("Dia before hore"+a.getDia());
 						remover.add(a);
 					}
 //					if(a.getDia().before(hoje)) {
@@ -106,9 +105,15 @@ public class AulaServiceImpl implements AulaService{
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-			}else if(hoje.after(a.getDia())){
-				remover.add(a);
-			}
+			} else
+				try {
+					if(hoje.after(dateHourFormat.parse(a.getDia()+" "+a.getHora()))){
+						remover.add(a);
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
 		}
 		aulas.removeAll(remover);	

@@ -64,6 +64,7 @@ public class AulaController {
 				Date horaCheck = hourFormat.parse(dataCheck[1]);
 				if(hoje.after(sdformat.parse(diaCheck)) && horaDate.after(horaCheck)) {
 					usuarioServiceImpl.uncheckAulaToUser(aluno);
+					System.out.println("Removeu checkin");
 				}	
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
