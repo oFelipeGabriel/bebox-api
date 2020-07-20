@@ -84,7 +84,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Override
 	public UsuariosResponse getUsuariosPaginated(int pageNo, int pageSize){
-		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Pageable paging = PageRequest.of(pageNo, 500);
 		Page<Usuario> usuarios = usuarioRepository.findAll(paging);
 		int prev = 0, next = 0;
 		if(usuarios.hasNext()){
