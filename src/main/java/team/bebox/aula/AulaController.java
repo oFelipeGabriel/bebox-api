@@ -85,7 +85,10 @@ public class AulaController {
 	@CrossOrigin
 	@JsonView(View.UsuarioBase.class)
 	@RequestMapping(value = "/addAlunoExperimental/{aula}", method = RequestMethod.POST)
-	public ResponseEntity<Collection<Aula>> addAlunoExperimental(@PathVariable("aula") int aula){
+	public ResponseEntity<Collection<Aula>> addAlunoExperimental(@PathVariable("aula") int idAula){
+		Aula aula = aulaServiceImpl.buscarPorId(idAula).get();
+		Usuario admin = usuarioServiceImpl.buscarPorId(1);
+		aulaServiceImpl.addAluno(aula, admin);
 		return new ResponseEntity<Collection<Aula>> (aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
 	}
 	
@@ -130,17 +133,28 @@ public class AulaController {
 		return aulas;
 	}
 
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
 	@PostMapping("/removeAluno/{aula}/{aluno}/")
 	@ResponseBody
 	public AulaResponse removeAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){		
 		Usuario u = usuarioServiceImpl.buscarPorId(aluno);
-		usuarioServiceImpl.uncheckAulaToUser(u);
-		
+		usuarioServiceImpl.uncheckAulaToUser(u);		
 		Aula a = aulaServiceImpl.buscarPorId(aula).get();
 		aulaServiceImpl.removeAluno(a, u);
 		return aulaServiceImpl.buscarTodas(aluno);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@CrossOrigin
+	@PostMapping("/adminRemoveAluno/{aula}/{aluno}/")
+	@ResponseBody
+	public ResponseEntity<Collection<Aula>> adminRemoveAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int aluno){		
+		Usuario u = usuarioServiceImpl.buscarPorId(aluno);
+		usuarioServiceImpl.uncheckAulaToUser(u);		
+		Aula a = aulaServiceImpl.buscarPorId(aula).get();
+		aulaServiceImpl.removeAluno(a, u);
+		return new ResponseEntity<Collection<Aula>>(aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
 	}
 	
 }
