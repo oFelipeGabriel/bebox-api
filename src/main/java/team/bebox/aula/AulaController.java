@@ -132,8 +132,8 @@ public class AulaController {
 		AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
 		return aulas;
 	}
-
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	
+	@PreAuthorize("isAuthenticated()")
 	@CrossOrigin
 	@PostMapping("/removeAluno/{aula}/{aluno}/")
 	@ResponseBody
@@ -144,8 +144,8 @@ public class AulaController {
 		aulaServiceImpl.removeAluno(a, u);
 		return aulaServiceImpl.buscarTodas(aluno);
 	}
-	
-	@PreAuthorize("isAuthenticated()")
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@CrossOrigin
 	@PostMapping("/adminRemoveAluno/{aula}/{aluno}/")
 	@ResponseBody
