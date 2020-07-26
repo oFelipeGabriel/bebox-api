@@ -58,7 +58,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioRepository.findById(id).get();
 	}
 
-
+	@Override
+	public Boolean atualizaStatus(int id, Boolean status) {
+		Usuario aluno = usuarioRepository.findById(id).get();
+		aluno.setStatus(status);
+		try {
+			usuarioRepository.save(aluno);
+			return true;
+		}catch(Exception e) {
+			return false;
+		}		
+	}
+	
 	public Collection<Usuario> todos() {
 		Collection<Usuario> usuarios = usuarioRepository.findByStatus(true);
 		return usuarios;
@@ -83,9 +94,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
-	public UsuariosResponse getUsuariosPaginated(int pageNo, int pageSize){
-		Pageable paging = PageRequest.of(pageNo, 500);
-		Page<Usuario> usuarios = usuarioRepository.findAll(paging);
+	public UsuariosResponse getUsuariosPaginated(int pageNo, int pageSize, String ativo){
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Boolean isAtivo = true;
+		if(ativo!=null) {
+			isAtivo = Boolean.parseBoolean(ativo);
+		}
+		Page<Usuario> usuarios = usuarioRepository.findByStatusOrderByDataVencimento(isAtivo, paging);
 		int prev = 0, next = 0;
 		if(usuarios.hasNext()){
 			next = pageNo+1;
@@ -95,7 +110,27 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
     	return new UsuariosResponse(usuarios.getContent(), next, prev, usuarios.getTotalPages());
 	}
-
+	
+	@Override
+	public UsuariosResponse buscaPorNome(String nome, String ativo){
+		Boolean isAtivo = true;
+		if(ativo!=null) {
+			isAtivo = Boolean.parseBoolean(ativo);
+		}
+		int pageNo = 0;
+		Pageable paging = PageRequest.of(0, 100);
+		Page<Usuario> alunos =  usuarioRepository.findByNomeContainingIgnoreCaseAndStatusOrderByDataVencimento(nome, isAtivo, paging); 
+		int prev = 0, next = 0;
+		if(alunos.hasNext()){
+			next = pageNo+1;
+		}
+		if(alunos.hasPrevious()) {
+			prev = pageNo-1;
+		}
+		return new UsuariosResponse(alunos.getContent(), next, prev, alunos.getTotalPages());
+	}
+	
+	
 	public class AlunosRetorno{
 		
 	}

@@ -174,8 +174,8 @@ public class UsuarioController {
 	@CrossOrigin
 	@RequestMapping(value = "/getAll/{pageNo}/{pageSize}", method = RequestMethod.GET)
 	public UsuariosResponse getAll(@PathVariable int pageNo, 
-            @PathVariable int pageSize) {
-		return usuarioService.getUsuariosPaginated(pageNo, pageSize);
+            @PathVariable int pageSize, @RequestParam(required = false) String ativo) {
+		return usuarioService.getUsuariosPaginated(pageNo, pageSize, ativo);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -185,8 +185,24 @@ public class UsuarioController {
 	public ResponseEntity<Collection<Usuario>> getAllAdmin() {
 		return new ResponseEntity<Collection<Usuario>>(usuarioService.todosAdmins(), HttpStatus.OK);
 	}
-
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@CrossOrigin
+	@RequestMapping(value = "/buscaAluno", method = RequestMethod.POST)
+	public UsuariosResponse getByNome(@RequestBody ObjectNode json, @RequestParam(required = false) String ativo){
+		String aluno = json.get("nome").asText();
+		return usuarioService.buscaPorNome(aluno, ativo);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@CrossOrigin
+	@RequestMapping(value = "/atualizaStatus", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> atualizaStatus(@RequestBody ObjectNode json){
+		int id = json.get("id").asInt();
+		Boolean status = json.get("status").asBoolean();
+		Boolean deuCerto = usuarioService.atualizaStatus(id, status);
+		return new ResponseEntity<Boolean>(deuCerto, HttpStatus.OK);
+	}
 	public static String md5(String senha) {
 		try {
 			MessageDigest algorithm = MessageDigest.getInstance("MD5");

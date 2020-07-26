@@ -1,7 +1,6 @@
 package team.bebox.user;
 
 import java.util.Collection;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -23,4 +22,8 @@ public interface UsuarioRepository extends PagingAndSortingRepository<Usuario, I
 	
 	Collection<Usuario> findByStatus(Boolean status);
 	Page<Usuario> findAll(Pageable pageable);
+	Page<Usuario> findAllByOrderByNome(Pageable pageable);
+	Page<Usuario> findByStatusOrderByDataVencimento(Boolean status, Pageable pageable); 
+	Page<Usuario> findByNomeContainingIgnoreCase(String query, Pageable pageable);
+	Page<Usuario> findByNomeContainingIgnoreCaseAndStatusOrderByDataVencimento(String nome, Boolean status, Pageable pageable);
 }
