@@ -158,6 +158,9 @@ public class AulaServiceImpl implements AulaService{
 
 	public Collection<Aula> removeAula(int idAula) {
 		Aula aula = aulaRepo.findById(idAula).get();
+		for(Usuario a: aula.getAlunos()) {
+			alunoService.uncheckAulaToUser(a);
+		}
 		ArrayList<Usuario> alunos = new ArrayList<>();
 		aula.setAlunos(alunos);
 		aulaRepo.save(aula);
