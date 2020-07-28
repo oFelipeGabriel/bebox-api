@@ -119,7 +119,17 @@ public class AulaController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		return new ResponseEntity<Aula>(a, responseHeaders, HttpStatus.CREATED);
 	}
-
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@CrossOrigin
+	@RequestMapping(value = "/adminAddAluno/{aula}/{aluno}/", method = RequestMethod.POST)
+	public ResponseEntity<Collection<Aula>> removeAlunoAula(@PathVariable("aula") int idAula, @PathVariable("aluno") int idAluno){
+		Usuario aluno = usuarioServiceImpl.buscarPorId(idAluno);
+		Aula aula = aulaServiceImpl.buscarPorId(idAula).get();
+		Aula a = aulaServiceImpl.addAluno(aula, aluno);
+		usuarioServiceImpl.checkAulaToUser(aluno, a);
+		return new ResponseEntity<Collection<Aula>>(aulaServiceImpl.buscarTodasDone(), HttpStatus.OK);
+	}
+	
 	@PreAuthorize("isAuthenticated()")
 	@CrossOrigin
 	@PostMapping("/addAluno/{aula}/{aluno}/")
