@@ -135,12 +135,18 @@ public class AulaController {
 	@PostMapping("/addAluno/{aula}/{aluno}/")
 	@ResponseBody
 	public AulaResponse addAluno(@PathVariable("aula") int aula, @PathVariable("aluno") int idAluno){
-		Usuario user = usuarioServiceImpl.buscarPorId(idAluno);		
-		Aula a = aulaServiceImpl.addAluno(aulaServiceImpl.buscarPorId(aula).get(), user);
-		usuarioServiceImpl.checkAulaToUser(user, a);
+		Usuario user = usuarioServiceImpl.buscarPorId(idAluno);	
+		Aula a = aulaServiceImpl.buscarPorId(aula).get();
+		if(a.getAlunos().size()>=a.getQuantidade()) {
+			return aulaServiceImpl.buscarTodas(idAluno);
+		}else {
+			Aula al = aulaServiceImpl.addAluno(a, user);
+			usuarioServiceImpl.checkAulaToUser(user, a);
+			
+			AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
+			return aulas;
+		}
 		
-		AulaResponse aulas = aulaServiceImpl.buscarTodas(idAluno);
-		return aulas;
 	}
 	
 	@PreAuthorize("isAuthenticated()")
